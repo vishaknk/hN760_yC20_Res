@@ -152,7 +152,7 @@ public class Dashboard extends javax.swing.JFrame {
     private void ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordersActionPerformed
         // TODO add your handling code here:
        
-        new Dashboard().setVisible(true);
+        new FoodType().setVisible(true);
        
     }//GEN-LAST:event_ordersActionPerformed
 

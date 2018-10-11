@@ -63,7 +63,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         userName.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        userName.setText("priyesh2891@gmail.com");
+        userName.setText("admin@gmail.com");
         userName.setName("username"); // NOI18N
         userName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,7 +124,6 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Invalid Credentials", "ERROR", 0);
 
         }
-        new Dashboard().setVisible(true);
        
     }//GEN-LAST:event_LoginActionPerformed
 

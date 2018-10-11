@@ -10,7 +10,7 @@ public class DbConnection {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_USER_NAME = "root";
     static final String DB_PASSWORD = "root123!";
-    static final String DB_NAME = "restaurant";
+    static final String DB_NAME = "kot_db";
     static final String DB_URL = "jdbc:mysql://127.0.0.1/";
 
     public static Connection getDbConnection() {
