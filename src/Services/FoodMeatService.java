@@ -14,26 +14,27 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import model.FoodTypeModel;
+import model.FoodMeatModel;
+import model.FoodMeatModel;
 
 /**
  *
  * @author Group name
  */
-public class FoodTypeService {
+public class FoodMeatService {
 
-    public int saveOrUpdateFoodType(FoodTypeModel foodTypeModel, boolean isAdd) {
+    public int saveOrUpdateFoodMeatType(FoodMeatModel foodMeatModel, boolean isAdd) {
         int status = 0;
         SQLRun sqlObj = new SQLRun();
         String sql = "";
         if (isAdd) {
-            sql = "Insert into tbl_food_type (food_type_name) "
-                    + "values('" + foodTypeModel.getFood_type_name() + "')";
+            sql = "Insert into tbl_meat_type (food_meat_name) "
+                    + "values('" + foodMeatModel.getFood_meat_name() + "')";
             status = sqlObj.sqlUpdate(sql);
 
         } else {
-            sql = "update tbl_food_type set food_type_name = '" + foodTypeModel.getFood_type_name()
-                    + "' where food_type_id = '" + foodTypeModel.getFood_type_id() + "'";
+            sql = "update tbl_meat_type set food_meat_name = '" + foodMeatModel.getFood_meat_name()
+                    + "' where food_meat_id = '" + foodMeatModel.getFood_meat_id() + "'";
 
             status = sqlObj.sqlUpdate(sql);
 
@@ -42,17 +43,17 @@ public class FoodTypeService {
         return status;
     }
 
-    public List<FoodTypeModel> getFoodItems() {
-        List<FoodTypeModel> foodItemList = new ArrayList<>();
-        String sql = "select food_type_id,food_type_name  from tbl_food_type";
+    public List<FoodMeatModel> getFoodItems() {
+        List<FoodMeatModel> foodItemList = new ArrayList<>();
+        String sql = "select food_meat_id,food_meat_name  from tbl_meat_type";
         SQLRun sqlObj = new SQLRun();
 
         ResultSet rs = sqlObj.sqlQuery(sql);
         try {
             while (rs.next()) {
-                FoodTypeModel foodItem = new FoodTypeModel();
-                foodItem.setFood_type_name(rs.getString("food_type_name"));
-                foodItem.setFood_type_id(rs.getInt("food_type_id"));
+                FoodMeatModel foodItem = new FoodMeatModel();
+                foodItem.setFood_meat_name(rs.getString("food_meat_name"));
+                foodItem.setFood_meat_id(rs.getInt("food_meat_id"));
 
                 foodItemList.add(foodItem);
             }
@@ -64,21 +65,21 @@ public class FoodTypeService {
 
     public int deleteFoodItem(int id) {
         SQLRun sqlObj = new SQLRun();
-        String sql = "delete from tbl_food_type where food_type_id = '" + id + "'";
+        String sql = "delete from tbl_meat_type where food_meat_id = '" + id + "'";
         return sqlObj.sqlUpdate(sql);
     }
 
-    public FoodTypeModel getFoodDetailsById(int id) {
-        FoodTypeModel foodItem = new FoodTypeModel();
-        foodItem.setFood_type_id(id);
+    public FoodMeatModel getFoodDetailsById(int id) {
+        FoodMeatModel foodItem = new FoodMeatModel();
+        foodItem.setFood_meat_id(id);
 
         SQLRun sqlObj = new SQLRun();
-        String sql = "select food_type_id,food_type_name from tbl_food_type where food_type_id = '" + id + "'";
+        String sql = "select food_meat_id,food_meat_name from tbl_meat_type where food_meat_id = '" + id + "'";
         ResultSet rs = sqlObj.sqlQuery(sql);
         try {
             while (rs.next()) {
-                foodItem.setFood_type_id(rs.getInt("food_type_id"));
-                foodItem.setFood_type_name(rs.getString("food_type_name"));
+                foodItem.setFood_meat_id(rs.getInt("food_meat_id"));
+                foodItem.setFood_meat_name(rs.getString("food_meat_name"));
             }
         } catch (Exception e) {
         }

@@ -4,65 +4,46 @@
  * and open the template in the editor.
  */
 package UI;
-
-import Services.FoodTypeService;
+import Services.FoodCategoryService;
 import Utility.ButtonColumn;
-import Utility.Utility;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.FoodTypeModel;
+import model.FoodCategoryModel;
+import model.FoodCategoryModel;
 
 /**
  *
  * @author priyesh
  */
-public class FoodType extends javax.swing.JFrame {
+public class FoodCategory extends javax.swing.JPanel {
 
     /**
-     * Creates new form Login
+     * Creates new form FoodCategory
      */
-    public FoodType() {
+    public FoodCategory() {
         initComponents();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
-        Point newLocation = new Point(middle.x - (this.getWidth() / 2),
-                middle.y - (this.getHeight() / 2));
-        setLocation(newLocation);
-        setLayout(new BorderLayout());
-        this.setLocationRelativeTo(null);
-        //this.setUndecorated(true);
-        getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         getFoodItems();
     }
-
     public void getFoodItems() {
-        FoodTypeService foodItemService = new FoodTypeService();
-        List<FoodTypeModel> foodItemList = foodItemService.getFoodItems();
-        if (foodItemList.size() <= 0) {
-            new Dashboard().setVisible(true);
-            this.setVisible(false);
-        }
+        FoodCategoryService foodCategoryService = new FoodCategoryService();
+        List<FoodCategoryModel> foodItemList = foodCategoryService.getFoodItems();
+       
         String data[][] = new String[foodItemList.size()][4];
         for (int i = 0; i < foodItemList.size(); i++) {
-            data[i][0] = new Integer(foodItemList.get(i).getFood_type_id()).toString();
-            data[i][1] = foodItemList.get(i).getFood_type_name();
+            data[i][0] = new Integer(i + 1).toString();
+            data[i][1] = foodItemList.get(i).getFood_category_name();
             data[i][2] = "Update";
             data[i][3] = "Delete";
         }
-        String columnNames[] = new String[]{"food_type_id", "food_type_name", "action", "action2"};
+        String columnNames[] = new String[]{"Sl.No.", "Food Category", "", ""};
         DefaultTableModel tbl = new DefaultTableModel(data, columnNames);
-        foodTypeTable.setModel(tbl);
+        foodCategoryTable.setModel(tbl);
 
         Action update = new AbstractAction() {
             @Override
@@ -71,17 +52,17 @@ public class FoodType extends javax.swing.JFrame {
                 int modelRow = Integer.valueOf(e.getActionCommand());
                 String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
                 int idVal = Integer.parseInt(idValString);
-                editField(idVal);
+                editField(foodItemList.get(idVal - 1).getFood_category_id());
             }
 
             private void editField(int idVal) {
-                foodId = idVal;
-                FoodTypeModel foodModel = new FoodTypeModel();
-                foodModel.setFood_type_id(idVal);
-                FoodTypeService foodItemService = new FoodTypeService();
-                foodModel = foodItemService.getFoodDetailsById(idVal);
-                foodTypeValue.setText(foodModel.getFood_type_name());
-                addFood.setText("Update Food Item");
+                foodCategoryId = idVal;
+                FoodCategoryModel foodModel = new FoodCategoryModel();
+                foodModel.setFood_category_id(idVal);
+                FoodCategoryService foodCategoryService = new FoodCategoryService();
+                foodModel = foodCategoryService.getFoodDetailsById(idVal);
+                foodCategoryName.setText(foodModel.getFood_category_name());
+                addFood.setText("Update Food Category");
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
@@ -93,13 +74,13 @@ public class FoodType extends javax.swing.JFrame {
                 int modelRow = Integer.valueOf(e.getActionCommand());
                 String id = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
                 int foodId = Integer.parseInt(id);
-                FoodTypeModel foodTypeModel = new FoodTypeModel();
-                foodTypeModel.setFood_type_id(foodId);
+                FoodCategoryModel foodTypeModel = new FoodCategoryModel();
+                foodTypeModel.setFood_category_id(foodItemList.get(foodId - 1).getFood_category_id());
 
                 int dialogResult = JOptionPane.showConfirmDialog(null, "Confirm delete ?", "Warning", JOptionPane.YES_NO_OPTION);
                 int status = 0;
                 if (dialogResult == JOptionPane.YES_OPTION) {
-                    status = foodItemService.deleteFoodItem(foodTypeModel.getFood_type_id());
+                    status = foodCategoryService.deleteFoodItem(foodTypeModel.getFood_category_id());
                 }
 
                 if (status == 1) {
@@ -115,10 +96,10 @@ public class FoodType extends javax.swing.JFrame {
                 JTable table = (JTable) e.getSource();
                 int modelRow = Integer.valueOf(e.getActionCommand());
                 String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString);
-                FoodTypeModel foodTypeModel = new FoodTypeModel();
-                foodTypeModel.setFood_type_id(idVal);
-                foodTypeModel = foodItemService.getFoodDetailsById(foodTypeModel.getFood_type_id());
+                int idVal = Integer.parseInt(idValString) + 1;
+                FoodCategoryModel foodTypeModel = new FoodCategoryModel();
+                foodTypeModel.setFood_category_id(idVal);
+                foodTypeModel = foodCategoryService.getFoodDetailsById(foodTypeModel.getFood_category_id());
 
 //                Utility.visiblePanel.setVisible(false);
 //                Utility.ticketForm = new TicketForm();
@@ -129,9 +110,9 @@ public class FoodType extends javax.swing.JFrame {
             }
         };
 
-        ButtonColumn buttonColumnEdit = new ButtonColumn(foodTypeTable, update, 2);
+        ButtonColumn buttonColumnEdit = new ButtonColumn(foodCategoryTable, update, 2);
         buttonColumnEdit.setMnemonic(KeyEvent.VK_D);
-        ButtonColumn buttonColumnDelete = new ButtonColumn(foodTypeTable, delete, 3);
+        ButtonColumn buttonColumnDelete = new ButtonColumn(foodCategoryTable, delete, 3);
         buttonColumnDelete.setMnemonic(KeyEvent.VK_D);
     }
 
@@ -147,20 +128,18 @@ public class FoodType extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         addFood = new javax.swing.JButton();
-        foodTypeValue = new javax.swing.JTextField();
+        foodCategoryName = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        foodTypeTable = new javax.swing.JTable();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        foodCategoryTable = new javax.swing.JTable();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Create Food Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 0, 13), new java.awt.Color(102, 102, 102))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Create Food Category", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 0, 13), new java.awt.Color(102, 102, 102))); // NOI18N
 
-        jLabel2.setText("Food Type Name");
+        jLabel2.setText("Food Category Name");
 
         addFood.setBackground(new java.awt.Color(0, 153, 255));
         addFood.setForeground(new java.awt.Color(255, 255, 255));
-        addFood.setText("Add food type");
+        addFood.setText("Add food category");
         addFood.setName("LoginBtn"); // NOI18N
         addFood.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -168,20 +147,22 @@ public class FoodType extends javax.swing.JFrame {
             }
         });
 
-        foodTypeValue.setToolTipText("Food Type Name");
+        foodCategoryName.setToolTipText("Food Type Name");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(1072, 1072, 1072)
-                        .addComponent(addFood, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(foodTypeValue))
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(foodCategoryName, javax.swing.GroupLayout.PREFERRED_SIZE, 1215, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(954, 954, 954)
+                        .addComponent(addFood, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -190,15 +171,13 @@ public class FoodType extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(foodTypeValue, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(foodCategoryName, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(addFood)
                 .addGap(22, 22, 22))
         );
 
-        foodTypeValue.getAccessibleContext().setAccessibleName("Food Type Name");
-
-        foodTypeTable.setModel(new javax.swing.table.DefaultTableModel(
+        foodCategoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -206,7 +185,7 @@ public class FoodType extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Sl. No.", "Food Type", ""
+                "Sl. No.", "Food Category", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -217,10 +196,10 @@ public class FoodType extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(foodTypeTable);
+        jScrollPane1.setViewportView(foodCategoryTable);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -237,90 +216,50 @@ public class FoodType extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void addFoodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFoodActionPerformed
         // TODO add your handling code here:
         // validation for empty
-        if (foodTypeValue.getText().toString().trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Please enter some food type.", "ERROR", 0);
+        if (foodCategoryName.getText().toString().trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Please enter some food category.", "ERROR", 0);
             return;
         }
-        FoodTypeModel foodType = new FoodTypeModel();
-        foodType.setFood_type_name(foodTypeValue.getText().toString());
+        FoodCategoryModel foodCategory = new FoodCategoryModel();
+        foodCategory.setFood_category_name(foodCategoryName.getText().toString());
 
-        FoodTypeService foodTypeService = new FoodTypeService();
+        FoodCategoryService foodCategoryService = new FoodCategoryService();
         int response;
         if (addFood.getText().contains("Update")) {
-            foodType.setFood_type_id(foodId);
-            response = foodTypeService.saveOrUpdateFoodType(foodType, false);
+            foodCategory.setFood_category_id(foodCategoryId);
+            response = foodCategoryService.saveOrUpdateFoodType(foodCategory, false);
         } else {
-            response = foodTypeService.saveOrUpdateFoodType(foodType, true);
+            response = foodCategoryService.saveOrUpdateFoodType(foodCategory, true);
         }
         clearAll();
         if (response == 1) {
             getFoodItems();
-            JOptionPane.showMessageDialog(null, "Food Type " + foodType.getFood_type_name() + " has been updated successfully", "Success", 1);
+            JOptionPane.showMessageDialog(null, "Food Type " + foodCategory.getFood_category_name() + " has been updated successfully", "Success", 1);
         } else {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
 
         }
-
+        
     }//GEN-LAST:event_addFoodActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FoodType.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FoodType.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FoodType.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FoodType.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FoodType().setVisible(true);
-            }
-        });
-    }
-
-    public void clearAll() {
-        foodTypeValue.setText("");
-    }
-
-    int foodId;
+    private int foodCategoryId;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFood;
-    private javax.swing.JTable foodTypeTable;
-    private javax.swing.JTextField foodTypeValue;
+    private javax.swing.JTextField foodCategoryName;
+    private javax.swing.JTable foodCategoryTable;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+public void clearAll() {
+        foodCategoryName.setText("");
+    }
 }

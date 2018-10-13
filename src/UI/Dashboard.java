@@ -9,9 +9,13 @@ import Services.LoginServices;
 import Utility.Utility;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
 /**
@@ -34,6 +38,12 @@ public class Dashboard extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         //this.setUndecorated(true);
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+        /*this.addWindowStateListener(new WindowStateListener() {
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                validate();
+            }
+        });*/
     }
 
     /**
@@ -51,6 +61,8 @@ public class Dashboard extends javax.swing.JFrame {
         kitchen = new javax.swing.JButton();
         staff = new javax.swing.JButton();
         payroll = new javax.swing.JButton();
+        settings = new javax.swing.JButton();
+        p_main = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -114,6 +126,29 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        settings.setBackground(new java.awt.Color(0, 153, 255));
+        settings.setForeground(new java.awt.Color(255, 255, 255));
+        settings.setText("Settings");
+        settings.setName("LoginBtn"); // NOI18N
+        settings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settingsActionPerformed(evt);
+            }
+        });
+
+        p_main.setBackground(new java.awt.Color(238, 38, 238));
+
+        javax.swing.GroupLayout p_mainLayout = new javax.swing.GroupLayout(p_main);
+        p_main.setLayout(p_mainLayout);
+        p_mainLayout.setHorizontalGroup(
+            p_mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        p_mainLayout.setVerticalGroup(
+            p_mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 735, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,7 +166,10 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(kitchen, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(payroll, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(584, Short.MAX_VALUE))
+            .addComponent(p_main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,8 +180,10 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(kitchen, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(staff, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(payroll, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 251, Short.MAX_VALUE))
+                    .addComponent(payroll, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(p_main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -166,15 +206,27 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void kitchenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kitchenActionPerformed
         // TODO add your handling code here:
+        FoodMeatType panel = new FoodMeatType();
+        setMainLayout(panel,p_main);
     }//GEN-LAST:event_kitchenActionPerformed
 
     private void staffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffActionPerformed
         // TODO add your handling code here:
+         new StaffDetails().setVisible(true);
     }//GEN-LAST:event_staffActionPerformed
 
     private void payrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payrollActionPerformed
         // TODO add your handling code here:
+        FoodCategory panel = new FoodCategory();
+        setMainLayout(panel,p_main);
     }//GEN-LAST:event_payrollActionPerformed
+
+    private void settingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsActionPerformed
+        // TODO add your handling code here:
+        ShopeDetails panel = new ShopeDetails();
+        setMainLayout(panel,p_main);
+        
+    }//GEN-LAST:event_settingsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -188,12 +240,21 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void setMainLayout(JPanel classObject, JPanel panel) {
+        classObject.setVisible(true);
+        panel.setLayout(new BorderLayout());
+        panel.add(classObject);
+        panel.validate();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton kitchen;
     private javax.swing.JButton menu;
     private javax.swing.JButton orders;
+    private javax.swing.JPanel p_main;
     private javax.swing.JButton payroll;
+    private javax.swing.JButton settings;
     private javax.swing.JButton staff;
     private javax.swing.JButton table;
     // End of variables declaration//GEN-END:variables
