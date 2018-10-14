@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author priyesh
  */
 public class Utility {
-    public static String ROLE = "admin";
+    public static String ROLE = "Admin";
     public static String NAME = "";
     public static int ID = 1;
     public static int user_id;

@@ -22,11 +22,11 @@ public class LoginServices {
 
         try {
             SQLRun objSQL = new SQLRun();
-            ResultSet rs = objSQL.sqlQuery("Select * from user where "
+            ResultSet rs = objSQL.sqlQuery("Select * from tbl_register where "
                     + "email = '" + user.getUsername() + "' and "
                     + "password = '" + user.getPassword() + "' ");
             if (rs.next()) {
-                user.setId(rs.getInt("id"));
+                user.setId(rs.getInt("user_id"));
                 user.setRole(rs.getString("role"));
 
             } else {
@@ -35,6 +35,7 @@ public class LoginServices {
             }
         } catch (SQLException ex) {
             user = null;
+            ex.printStackTrace();
         }
         return user;
     }
