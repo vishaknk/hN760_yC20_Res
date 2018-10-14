@@ -43,7 +43,6 @@ public class OrderDetails extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        imagePainter1 = new org.jdesktop.swingx.painter.ImagePainter();
         p_top_header = new javax.swing.JPanel();
         l_name = new javax.swing.JLabel();
         p_menu = new javax.swing.JPanel();
@@ -72,7 +71,6 @@ public class OrderDetails extends javax.swing.JFrame {
         p_top_header.add(l_name);
 
         p_menu.setBackground(new java.awt.Color(8, 140, 234));
-        p_menu.setLayout(new org.jdesktop.swingx.HorizontalLayout());
 
         lb_dashboard.setForeground(new java.awt.Color(255, 255, 255));
         lb_dashboard.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -235,7 +233,6 @@ public class OrderDetails extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.jdesktop.swingx.painter.ImagePainter imagePainter1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel l_name;
     private javax.swing.JLabel lb_dashboard;
