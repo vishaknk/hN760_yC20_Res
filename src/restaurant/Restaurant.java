@@ -5,7 +5,9 @@
  */
 package restaurant;
 
+import UI.AdminDetails;
 import UI.Login;
+import UI.OrderDetails;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -26,7 +28,8 @@ public class Restaurant {
         }catch(ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e){
         }
        // open the login page
-        new Login().setVisible(true);
+        //new Login().setVisible(true);
+        new OrderDetails().setVisible(true);
     }
     
 }

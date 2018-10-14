@@ -5,7 +5,7 @@
  */
 package UI;
 
-import model.User;
+import Model.User;
 import Services.LoginServices;
 import Utility.Utility;
 import java.awt.BorderLayout;

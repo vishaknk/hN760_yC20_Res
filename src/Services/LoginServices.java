@@ -6,7 +6,7 @@
 package Services;
 
 import DBConnection.SQLRun;
-import model.User;
+import Model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
