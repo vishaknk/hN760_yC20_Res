@@ -14,9 +14,11 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -38,12 +40,6 @@ public class Dashboard extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         //this.setUndecorated(true);
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-        /*this.addWindowStateListener(new WindowStateListener() {
-            @Override
-            public void windowStateChanged(WindowEvent e) {
-                validate();
-            }
-        });*/
     }
 
     /**
@@ -192,7 +188,8 @@ public class Dashboard extends javax.swing.JFrame {
     private void ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordersActionPerformed
         // TODO add your handling code here:
        
-        new FoodType().setVisible(true);
+        OrderDetails order = new OrderDetails();
+        order.show();
        
     }//GEN-LAST:event_ordersActionPerformed
 
