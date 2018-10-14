@@ -204,6 +204,8 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActionPerformed
         // TODO add your handling code here:
+        MenuPanel panel = new MenuPanel();
+        setMainLayout(panel,p_main);
     }//GEN-LAST:event_menuActionPerformed
 
     private void kitchenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kitchenActionPerformed

@@ -13,6 +13,14 @@ public class FoodTypeModel {
     private int food_type_id;
     private String food_type_name;
 
+    public FoodTypeModel() {
+    }
+
+    public FoodTypeModel(int food_type_id, String food_type_name) {
+        this.food_type_id = food_type_id;
+        this.food_type_name = food_type_name;
+    }
+
     public int getFood_type_id() {
         return food_type_id;
     }
@@ -28,6 +36,10 @@ public class FoodTypeModel {
     public void setFood_type_name(String food_type_name) {
         this.food_type_name = food_type_name;
     }
-
+    
+     public String toString()
+    {
+        return this.food_type_name;
+    }
    
 }
