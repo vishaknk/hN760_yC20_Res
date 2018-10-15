@@ -28,4 +28,16 @@ public class FoodMeatModel {
     public void setFood_meat_name(String food_meat_name) {
         this.food_meat_name = food_meat_name;
     }
+
+    public FoodMeatModel() {
+    }
+
+    public FoodMeatModel(int food_meat_id, String food_meat_name) {
+        this.food_meat_id = food_meat_id;
+        this.food_meat_name = food_meat_name;
+    }
+     public String toString()
+    {
+        return this.food_meat_name;
+    }
 }
