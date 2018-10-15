@@ -184,6 +184,7 @@ public class TablePanel extends javax.swing.JPanel {
     private void clearAll() {
         tableName.setText("");
         seatNumber.setText("");
+        addTable.setText("Create");
     }
 
     private int tableModelId;
@@ -230,7 +231,7 @@ public class TablePanel extends javax.swing.JPanel {
                 TableService tableService = new TableService();
                 tableName.setText(staffModel.getTable_name());
                 seatNumber.setText(String.valueOf(staffModel.getNo_of_seat()));
-                addTable.setText("Update Table");
+                addTable.setText("Update");
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
@@ -250,6 +251,7 @@ public class TablePanel extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                    clearAll();
                     getAllTables();
                 }
 

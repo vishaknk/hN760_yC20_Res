@@ -99,7 +99,7 @@ public class ShopeDetails extends javax.swing.JPanel {
 
         addShop.setBackground(new java.awt.Color(0, 153, 255));
         addShop.setForeground(new java.awt.Color(255, 255, 255));
-        addShop.setText("Add Shop");
+        addShop.setText("Create");
         addShop.setName("LoginBtn"); // NOI18N
         addShop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,7 +314,7 @@ public class ShopeDetails extends javax.swing.JPanel {
             data[i][3] = shopList.get(i).getEmail_address();
             data[i][4] = shopList.get(i).getPlace();
             data[i][5] = shopList.get(i).getAddress();
-            data[i][6] = "Update";
+            data[i][6] = "Edit";
             data[i][7] = "Delete";
         }
         String columnNames[] = new String[]{"Sl.No.", "Shop Name", "Phone", "Email", "Place", "Address", "", ""};
@@ -339,7 +339,7 @@ public class ShopeDetails extends javax.swing.JPanel {
                 email.setText(staffModel.getEmail_address());
                 place.setText(staffModel.getPlace());
                 address.setText(staffModel.getAddress());
-                addShop.setText("Update Shop Details");
+                addShop.setText("Update");
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
@@ -359,6 +359,7 @@ public class ShopeDetails extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                    clearAll();
                     getAllShops();
                 }
 
@@ -420,6 +421,7 @@ public class ShopeDetails extends javax.swing.JPanel {
         place.setText("");
         address.setText("");
         email.setText("");
+        addShop.setText("Create");
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

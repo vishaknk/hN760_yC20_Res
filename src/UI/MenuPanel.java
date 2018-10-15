@@ -125,7 +125,7 @@ public class MenuPanel extends javax.swing.JPanel {
 
         addMenuItem.setBackground(new java.awt.Color(0, 153, 255));
         addMenuItem.setForeground(new java.awt.Color(255, 255, 255));
-        addMenuItem.setText("Add Menu");
+        addMenuItem.setText("Create");
         addMenuItem.setName("LoginBtn"); // NOI18N
         addMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -526,6 +526,7 @@ public class MenuPanel extends javax.swing.JPanel {
         category.setSelectedIndex(0);
         filePicker.setTextField();
         image.setIcon(new ImageIcon(""));
+        addMenuItem.setText("Create");
 
     }
 
@@ -591,6 +592,7 @@ public class MenuPanel extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                    clearAll();
                     getAllMenuItems();
                 }
 

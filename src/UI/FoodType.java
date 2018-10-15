@@ -103,6 +103,7 @@ public class FoodType extends javax.swing.JFrame {
                 }
 
                 if (status == 1) {
+                     clearAll();
                     getFoodItems();
                 }
 

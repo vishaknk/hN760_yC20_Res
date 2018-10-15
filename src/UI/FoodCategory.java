@@ -86,6 +86,7 @@ public class FoodCategory extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                     clearAll();
                     getFoodItems();
                 }
 
@@ -141,7 +142,7 @@ public class FoodCategory extends javax.swing.JPanel {
 
         addFood.setBackground(new java.awt.Color(0, 153, 255));
         addFood.setForeground(new java.awt.Color(255, 255, 255));
-        addFood.setText("Add food category");
+        addFood.setText("Create");
         addFood.setName("LoginBtn"); // NOI18N
         addFood.setPreferredSize(new java.awt.Dimension(122, 29));
         addFood.addActionListener(new java.awt.event.ActionListener() {
@@ -265,5 +266,6 @@ public class FoodCategory extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 public void clearAll() {
         foodCategoryName.setText("");
+        addFood.setText("Create");
     }
 }

@@ -68,7 +68,7 @@ public class StaffPanel extends javax.swing.JPanel {
                 staff_mobile.setText(staffModel.getMobile());
                 staff_email.setText(staffModel.getEmail());
                 staff_password.setText(staffModel.getPassword());
-                addstaff.setText("Update Staff Details");
+                addstaff.setText("Update");
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
@@ -88,6 +88,7 @@ public class StaffPanel extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                    clearAll();
                     getAllStaffs();
                 }
 
@@ -166,13 +167,13 @@ public class StaffPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(staffTable);
 
         createStaffTitle.setBackground(new java.awt.Color(255, 255, 255));
-        createStaffTitle.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Create Food Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 0, 13), new java.awt.Color(102, 102, 102))); // NOI18N
+        createStaffTitle.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Create Staff Details", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 0, 13), new java.awt.Color(102, 102, 102))); // NOI18N
 
         name_label.setText("Staff Name*");
 
         addstaff.setBackground(new java.awt.Color(0, 153, 255));
         addstaff.setForeground(new java.awt.Color(255, 255, 255));
-        addstaff.setText("Add Staff");
+        addstaff.setText("Create");
         addstaff.setName("LoginBtn"); // NOI18N
         addstaff.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -317,6 +318,11 @@ public class StaffPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Password Cannot be Empty.", "ERROR", 0);
             return;
         }
+        
+        if (!Utility.validatePassword(staff_password.getText().toString().trim().toString())) {
+            JOptionPane.showMessageDialog(null, "Password should be Alphanumeric", "ERROR", 0);
+            return;
+        }
         if (!Utility.validatePhone(staff_mobile.getText().toString().trim().toString())) {
             JOptionPane.showMessageDialog(null, "Please enter valid phone number", "ERROR", 0);
             return;
@@ -361,7 +367,7 @@ public class StaffPanel extends javax.swing.JPanel {
         staff_mobile.setText("");
         staff_name.setText("");
         staff_password.setText("");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        addstaff.setText("Create");//To change body of generated methods, choose Tools | Templates.
     }
 
     int staffId;

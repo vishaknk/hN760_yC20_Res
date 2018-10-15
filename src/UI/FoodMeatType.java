@@ -86,6 +86,7 @@ public class FoodMeatType extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                     clearAll();
                     getFoodItems();
                 }
 
@@ -262,5 +263,6 @@ public class FoodMeatType extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 public void clearAll() {
         foodCategoryName.setText("");
+        addFood.setText("Create");
     }
 }
