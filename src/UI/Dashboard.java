@@ -5,41 +5,40 @@
  */
 package UI;
 
-import Services.LoginServices;
-import Utility.Utility;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
 
 /**
  *
- * @author priyesh
+ * @author Visak
  */
 public class Dashboard extends javax.swing.JFrame {
 
     /**
-     * Creates new form Login
+     * Creates new form OrderDetails
      */
     public Dashboard() {
         initComponents();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
-        Point newLocation = new Point(middle.x - (this.getWidth() / 2),
-                middle.y - (this.getHeight() / 2));
-        setLocation(newLocation);
-        setLayout(new BorderLayout());
-        this.setLocationRelativeTo(null);
-        //this.setUndecorated(true);
-        getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+        //Adding initial screen
+        OrderPanel orderPanel = new OrderPanel();
+        setMainLayout(orderPanel, p_main);
+        
+    }
+    
+    private void setMainLayout(JPanel toAddPanel, JPanel mainPanel) {
+        toAddPanel.setVisible(true);
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(toAddPanel);
+        mainPanel.validate();
+    }
+    
+    private void removeMainLayout(JPanel toAddPanel, JPanel mainPanel) {
+        mainPanel.remove(toAddPanel);
+        mainPanel.validate();
     }
 
     /**
@@ -51,88 +50,175 @@ public class Dashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        orders = new javax.swing.JButton();
-        table = new javax.swing.JButton();
-        menu = new javax.swing.JButton();
-        kitchen = new javax.swing.JButton();
-        staff = new javax.swing.JButton();
-        payroll = new javax.swing.JButton();
-        settings = new javax.swing.JButton();
+        p_top_header = new javax.swing.JPanel();
+        l_name = new javax.swing.JLabel();
+        p_menu = new javax.swing.JPanel();
+        lb_dashboard = new javax.swing.JLabel();
+        lb_menu = new javax.swing.JLabel();
+        lb_order = new javax.swing.JLabel();
+        lb_table = new javax.swing.JLabel();
+        lb_staff = new javax.swing.JLabel();
+        lb_kitchen = new javax.swing.JLabel();
+        lb_payroll = new javax.swing.JLabel();
+        lb_reports = new javax.swing.JLabel();
+        lb_settings = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         p_main = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1200, 550));
 
-        orders.setBackground(new java.awt.Color(0, 153, 255));
-        orders.setForeground(new java.awt.Color(255, 255, 255));
-        orders.setText("Order");
-        orders.setName("LoginBtn"); // NOI18N
-        orders.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ordersActionPerformed(evt);
+        p_top_header.setBackground(new java.awt.Color(8, 140, 234));
+
+        l_name.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
+        l_name.setForeground(new java.awt.Color(255, 255, 255));
+        l_name.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        l_name.setText("Easy Resturant");
+        l_name.setPreferredSize(new java.awt.Dimension(220, 25));
+        p_top_header.add(l_name);
+
+        p_menu.setBackground(new java.awt.Color(8, 140, 234));
+
+        lb_dashboard.setForeground(new java.awt.Color(255, 255, 255));
+        lb_dashboard.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_dashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/home.png"))); // NOI18N
+        lb_dashboard.setText("Dashboard");
+        lb_dashboard.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_dashboard.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_dashboard.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_dashboard.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_dashboardMouseClicked(evt);
             }
         });
+        p_menu.add(lb_dashboard);
 
-        table.setBackground(new java.awt.Color(0, 153, 255));
-        table.setForeground(new java.awt.Color(255, 255, 255));
-        table.setText("Table");
-        table.setName("LoginBtn"); // NOI18N
-        table.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tableActionPerformed(evt);
+        lb_menu.setForeground(new java.awt.Color(255, 255, 255));
+        lb_menu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_menu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/menu.png"))); // NOI18N
+        lb_menu.setText("Menu");
+        lb_menu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_menu.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_menu.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_menu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_menuMouseClicked(evt);
             }
         });
+        p_menu.add(lb_menu);
 
-        menu.setBackground(new java.awt.Color(0, 153, 255));
-        menu.setForeground(new java.awt.Color(255, 255, 255));
-        menu.setText("Menu");
-        menu.setName("LoginBtn"); // NOI18N
-        menu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuActionPerformed(evt);
+        lb_order.setForeground(new java.awt.Color(255, 255, 255));
+        lb_order.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_order.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/order.png"))); // NOI18N
+        lb_order.setText("Order");
+        lb_order.setToolTipText("");
+        lb_order.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_order.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_order.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_order.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_orderMouseClicked(evt);
             }
         });
+        p_menu.add(lb_order);
 
-        kitchen.setBackground(new java.awt.Color(0, 153, 255));
-        kitchen.setForeground(new java.awt.Color(255, 255, 255));
-        kitchen.setText("Kitchen");
-        kitchen.setName("LoginBtn"); // NOI18N
-        kitchen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kitchenActionPerformed(evt);
+        lb_table.setForeground(new java.awt.Color(255, 255, 255));
+        lb_table.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_table.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/table.png"))); // NOI18N
+        lb_table.setText("Table");
+        lb_table.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_table.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_table.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_tableMouseClicked(evt);
             }
         });
+        p_menu.add(lb_table);
 
-        staff.setBackground(new java.awt.Color(0, 153, 255));
-        staff.setForeground(new java.awt.Color(255, 255, 255));
-        staff.setText("Staff");
-        staff.setName("LoginBtn"); // NOI18N
-        staff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                staffActionPerformed(evt);
+        lb_staff.setForeground(new java.awt.Color(255, 255, 255));
+        lb_staff.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_staff.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/staff.png"))); // NOI18N
+        lb_staff.setText("Staff");
+        lb_staff.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_staff.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_staff.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_staff.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_staffMouseClicked(evt);
             }
         });
+        p_menu.add(lb_staff);
 
-        payroll.setBackground(new java.awt.Color(0, 153, 255));
-        payroll.setForeground(new java.awt.Color(255, 255, 255));
-        payroll.setText("Payroll");
-        payroll.setName("LoginBtn"); // NOI18N
-        payroll.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                payrollActionPerformed(evt);
+        lb_kitchen.setForeground(new java.awt.Color(255, 255, 255));
+        lb_kitchen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_kitchen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/kitchen.png"))); // NOI18N
+        lb_kitchen.setText("Kitchen");
+        lb_kitchen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_kitchen.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_kitchen.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_kitchen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_kitchenMouseClicked(evt);
             }
         });
+        p_menu.add(lb_kitchen);
 
-        settings.setBackground(new java.awt.Color(0, 153, 255));
-        settings.setForeground(new java.awt.Color(255, 255, 255));
-        settings.setText("Settings");
-        settings.setName("LoginBtn"); // NOI18N
-        settings.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                settingsActionPerformed(evt);
+        lb_payroll.setForeground(new java.awt.Color(255, 255, 255));
+        lb_payroll.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_payroll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/payroll.png"))); // NOI18N
+        lb_payroll.setText("Payroll");
+        lb_payroll.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_payroll.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_payroll.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_payroll.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_payrollMouseClicked(evt);
             }
         });
+        p_menu.add(lb_payroll);
 
-        p_main.setBackground(new java.awt.Color(238, 38, 238));
+        lb_reports.setForeground(new java.awt.Color(255, 255, 255));
+        lb_reports.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_reports.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/report.png"))); // NOI18N
+        lb_reports.setText("Reports");
+        lb_reports.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_reports.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_reports.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_reports.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_reportsMouseClicked(evt);
+            }
+        });
+        p_menu.add(lb_reports);
+
+        lb_settings.setForeground(new java.awt.Color(255, 255, 255));
+        lb_settings.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/settings.png"))); // NOI18N
+        lb_settings.setText("Settings");
+        lb_settings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lb_settings.setPreferredSize(new java.awt.Dimension(80, 80));
+        lb_settings.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        lb_settings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lb_settingsMouseClicked(evt);
+            }
+        });
+        p_menu.add(lb_settings);
+
+        p_top_header.add(p_menu);
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Profile");
+        jLabel1.setAlignmentX(0.5F);
+        jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel1.setPreferredSize(new java.awt.Dimension(150, 16));
+        p_top_header.add(jLabel1);
+
+        p_main.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout p_mainLayout = new javax.swing.GroupLayout(p_main);
         p_main.setLayout(p_mainLayout);
@@ -142,97 +228,102 @@ public class Dashboard extends javax.swing.JFrame {
         );
         p_mainLayout.setVerticalGroup(
             p_mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 735, Short.MAX_VALUE)
+            .addGap(0, 227, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(orders, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(table, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(staff, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(kitchen, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(payroll, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(584, Short.MAX_VALUE))
+            .addComponent(p_top_header, javax.swing.GroupLayout.DEFAULT_SIZE, 1200, Short.MAX_VALUE)
             .addComponent(p_main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(orders, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(table, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(kitchen, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(staff, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(payroll, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(p_top_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(p_main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ordersActionPerformed
+    private void lb_dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_dashboardMouseClicked
         // TODO add your handling code here:
-       
-        new FoodType().setVisible(true);
-       
-    }//GEN-LAST:event_ordersActionPerformed
+    }//GEN-LAST:event_lb_dashboardMouseClicked
 
-    private void tableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableActionPerformed
+    private void lb_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_menuMouseClicked
+        // TODO add your handling code here:
+        new FoodType().setVisible(true);
+    }//GEN-LAST:event_lb_menuMouseClicked
+
+    private void lb_orderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_orderMouseClicked
+        // TODO add your handling code here:
+        OrderPanel orderPanel = new OrderPanel();
+        setMainLayout(orderPanel, p_main);
+    }//GEN-LAST:event_lb_orderMouseClicked
+
+    private void lb_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_tableMouseClicked
         // TODO add your handling code here:
         TablePanel panel = new TablePanel();
         setMainLayout(panel,p_main);
-    }//GEN-LAST:event_tableActionPerformed
+    }//GEN-LAST:event_lb_tableMouseClicked
 
-    private void menuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActionPerformed
+    private void lb_staffMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_staffMouseClicked
         // TODO add your handling code here:
-        OrderDetails order = new OrderDetails();
-        order.show();
-    }//GEN-LAST:event_menuActionPerformed
+        new StaffDetails().setVisible(true);
+    }//GEN-LAST:event_lb_staffMouseClicked
 
-    private void kitchenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kitchenActionPerformed
+    private void lb_kitchenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_kitchenMouseClicked
         // TODO add your handling code here:
         FoodMeatType panel = new FoodMeatType();
         setMainLayout(panel,p_main);
-    }//GEN-LAST:event_kitchenActionPerformed
+    }//GEN-LAST:event_lb_kitchenMouseClicked
 
-    private void staffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffActionPerformed
-        // TODO add your handling code here:
-         new StaffDetails().setVisible(true);
-    }//GEN-LAST:event_staffActionPerformed
-
-    private void payrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payrollActionPerformed
+    private void lb_payrollMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_payrollMouseClicked
         // TODO add your handling code here:
         FoodCategory panel = new FoodCategory();
         setMainLayout(panel,p_main);
-    }//GEN-LAST:event_payrollActionPerformed
+    }//GEN-LAST:event_lb_payrollMouseClicked
 
-    private void settingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsActionPerformed
+    private void lb_reportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_reportsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lb_reportsMouseClicked
+
+    private void lb_settingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_settingsMouseClicked
         // TODO add your handling code here:
         ShopeDetails panel = new ShopeDetails();
         setMainLayout(panel,p_main);
-        
-    }//GEN-LAST:event_settingsActionPerformed
+    }//GEN-LAST:event_lb_settingsMouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -240,22 +331,21 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
     }
-    
-    private void setMainLayout(JPanel classObject, JPanel panel) {
-        classObject.setVisible(true);
-        panel.setLayout(new BorderLayout());
-        panel.add(classObject);
-        panel.validate();
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton kitchen;
-    private javax.swing.JButton menu;
-    private javax.swing.JButton orders;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel l_name;
+    private javax.swing.JLabel lb_dashboard;
+    private javax.swing.JLabel lb_kitchen;
+    private javax.swing.JLabel lb_menu;
+    private javax.swing.JLabel lb_order;
+    private javax.swing.JLabel lb_payroll;
+    private javax.swing.JLabel lb_reports;
+    private javax.swing.JLabel lb_settings;
+    private javax.swing.JLabel lb_staff;
+    private javax.swing.JLabel lb_table;
     private javax.swing.JPanel p_main;
-    private javax.swing.JButton payroll;
-    private javax.swing.JButton settings;
-    private javax.swing.JButton staff;
-    private javax.swing.JButton table;
+    private javax.swing.JPanel p_menu;
+    private javax.swing.JPanel p_top_header;
     // End of variables declaration//GEN-END:variables
 }

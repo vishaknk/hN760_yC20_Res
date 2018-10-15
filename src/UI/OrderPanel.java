@@ -6,16 +6,21 @@
 package UI;
 
 import Interface.ProductListener;
+import Utility.OrderItem;
 import Utility.ProductButton;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import model.ItemModel;
+import model.OrderItemModel;
 
 /**
  *
@@ -23,16 +28,25 @@ import javax.swing.ScrollPaneConstants;
  */
 public class OrderPanel extends javax.swing.JPanel {
 
+    private ItemModel foodCategoryType;
+    private OrderItemModel foodItems;
+    private OrderItemModel foodOrdered;
+    
     /**
      * Creates new form OrderPanel
      */
     public OrderPanel() {
         initComponents();
+        //Model class to store the item data
+        foodCategoryType = new ItemModel();
+        foodItems = new OrderItemModel();
+        foodOrdered = new OrderItemModel();
+        
         JPanel content = new JPanel();
-        ProductButton buttonData[] = new ProductButton[10];
+        ProductButton buttonData[] = new ProductButton[5];
         ButtonHandler handler=new ButtonHandler();
         
-        for(int index = 0; index < 10; index++){
+        for(int index = 0; index < 5; index++){
             buttonData[index] = new ProductButton("Welcome to hell ", index);
             buttonData[index].addProductListener(new ProductListener() {
                 @Override
@@ -44,6 +58,26 @@ public class OrderPanel extends javax.swing.JPanel {
             content.add(buttonData[index]);
         }
         sp_category.getViewport().setView(content);
+        
+        JPanel contentOrderItem = new JPanel();
+        contentOrderItem.setLayout(new GridLayout(0,4));
+        ProductButton buttonOrderItem[] = new ProductButton[100];
+        
+        for(int index = 0; index < 100; index++){
+           buttonOrderItem[index] = new ProductButton("Welcome to hell ", index);
+           contentOrderItem.add(buttonOrderItem[index]);
+        }
+        sp_product_list.getViewport().setView(contentOrderItem);
+        
+        
+        JPanel contentOrder = new JPanel();
+        contentOrder.setLayout(new BoxLayout(contentOrder, BoxLayout.Y_AXIS));
+        OrderItem orderData[] = new OrderItem[10];
+        for(int index = 0; index < 10; index++){
+            orderData[index] = new OrderItem(); 
+            contentOrder.add(orderData[index]);
+        }
+        sp_detail_list.getViewport().setView(contentOrder);
         
         
         
@@ -86,14 +120,15 @@ public class OrderPanel extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(700, 500));
         setMinimumSize(new java.awt.Dimension(700, 500));
         setPreferredSize(new java.awt.Dimension(700, 500));
-        setLayout(new java.awt.GridLayout());
+        setLayout(new java.awt.GridLayout(1, 0));
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
         jPanel4.setPreferredSize(new java.awt.Dimension(350, 0));
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         sp_detail_list.setBackground(new java.awt.Color(255, 0, 255));
         sp_detail_list.setBorder(null);
+        sp_detail_list.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jPanel4.add(sp_detail_list, java.awt.BorderLayout.CENTER);
 
         jPanel2.setBackground(new java.awt.Color(51, 51, 255));
@@ -113,7 +148,7 @@ public class OrderPanel extends javax.swing.JPanel {
 
         add(jPanel4);
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(51, 51, 51));
         jPanel3.setPreferredSize(new java.awt.Dimension(350, 0));
 
         jPanel1.setBackground(new java.awt.Color(255, 51, 0));
@@ -131,7 +166,7 @@ public class OrderPanel extends javax.swing.JPanel {
         );
 
         sp_category.setBackground(new java.awt.Color(255, 102, 102));
-        sp_category.setBorder(null);
+        sp_category.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         sp_product_list.setBackground(new java.awt.Color(0, 255, 51));
         sp_product_list.setBorder(null);
@@ -148,10 +183,11 @@ public class OrderPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_category, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_product_list, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(sp_category, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(sp_product_list, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         add(jPanel3);
