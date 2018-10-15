@@ -9,6 +9,8 @@ import DBConnection.SQLRun;
 import Services.MenuService;
 import Services.MenuService;
 import Utility.ButtonColumn;
+import Utility.ImageResizer;
+import Utility.JFilePicker;
 import Utility.Utility;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,11 +18,24 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -40,12 +55,24 @@ import model.ShopDetailsModel;
  */
 public class MenuPanel extends javax.swing.JPanel {
 
-    FoodVegType modelFoodType;
+    Map<Integer, FoodVegType> foodVegTypesMap;
+    Map<Integer, FoodTimingModel> foodTimeMap;
+    Map<Integer, FoodTypeModel> foodTypeMap;
+    Map<Integer, FoodCategoryModel> foodCategoryMap;
+    Map<Integer, FoodMeatModel> foodMeatMap;
+    String savedImagePath;
+    JFilePicker filePicker = new JFilePicker("Pick a file", "Browse...");
+
     /**
      * Creates new form ShopeDetails
      */
     public MenuPanel() {
         initComponents();
+        foodVegTypesMap = new HashMap<>();
+        foodTimeMap = new HashMap<>();
+        foodTypeMap = new HashMap<>();
+        foodCategoryMap = new HashMap<>();
+        foodMeatMap = new HashMap<>();
         menuService = new MenuService();
         initItems();
         getAllMenuItems();
@@ -67,10 +94,6 @@ public class MenuPanel extends javax.swing.JPanel {
         price = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         addMenuItem = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        shopTable1 = new javax.swing.JTable();
         type = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         category = new javax.swing.JComboBox<>();
@@ -83,8 +106,12 @@ public class MenuPanel extends javax.swing.JPanel {
         discountBox = new javax.swing.JCheckBox();
         discount = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
+        filePanel = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         menuTable = new javax.swing.JTable();
+        image = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -98,7 +125,7 @@ public class MenuPanel extends javax.swing.JPanel {
         );
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Add Menu Details"));
-        setPreferredSize(new java.awt.Dimension(1200, 1080));
+        setPreferredSize(new java.awt.Dimension(2000, 1000));
 
         menuName.setToolTipText("Food Type Name");
 
@@ -121,48 +148,6 @@ public class MenuPanel extends javax.swing.JPanel {
             }
         });
 
-        jPanel2.setBackground(new java.awt.Color(0, 153, 255));
-
-        jLabel1.setText("Menu Details");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        shopTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Sl. No.", "Shop Name", "Phone Number", "Email", "Place", "Address"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                true, true, false, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(shopTable1);
-
         jLabel7.setText("Veg Type*");
 
         jLabel8.setText("Category*");
@@ -176,6 +161,41 @@ public class MenuPanel extends javax.swing.JPanel {
         discountBox.setText("Discount");
 
         discount.setToolTipText("Food Type Name");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        filePanel.setBackground(new java.awt.Color(255, 153, 102));
+        filePanel.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setBackground(new java.awt.Color(0, 153, 255));
+
+        jLabel1.setText("Menu Details");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         menuTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -198,23 +218,6 @@ public class MenuPanel extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(menuTable);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1413, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -222,112 +225,135 @@ public class MenuPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(vegtype, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(type, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(meat, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(3499, 3499, 3499))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(menuName, javax.swing.GroupLayout.PREFERRED_SIZE, 1421, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(22, 22, 22)
+                                    .addComponent(discountBox))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(306, 306, 306)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(addMenuItem, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(vegtype, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(type, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(meat, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(3479, 3479, 3479))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(22, 22, 22)
-                                .addComponent(discountBox))
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(menuName, javax.swing.GroupLayout.PREFERRED_SIZE, 1421, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(563, 563, 563)
+                                .addComponent(image, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1413, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addMenuItem, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(menuName, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel7)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(vegtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jLabel10)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(22, 22, 22)
-                            .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel8)
-                                .addComponent(jLabel9))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(meat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addComponent(menuName, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(vegtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel10)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(22, 22, 22)
+                                    .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel8)
+                                    .addGap(33, 33, 33)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(meat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(discountBox))
-                .addGap(1, 1, 1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addMenuItem, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(discount, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(filePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addMenuItem, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(image, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 438, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(162, 162, 162)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void initItems() {
+        filePicker.setImageIcon(image);
+        filePicker.setMode(JFilePicker.MODE_OPEN);
+        filePicker.addFileTypeFilter(".jpg", "JPEG Images");
+        filePanel.add(filePicker);
+        filePanel.validate();
         discount.setVisible(false);
         discountBox.setVisible(false);
         SQLRun sqlObj = new SQLRun();
         String typeSql = "select food_type_id,food_type_name from tbl_food_type";
         ResultSet rs = sqlObj.sqlQuery(typeSql);
         try {
-            type.addItem(new FoodTypeModel(0, "Select"));
+
+            foodTypeMap.put(0, new FoodTypeModel(0, "Select"));
+            type.addItem(foodTypeMap.get(0));
             while (rs.next()) {
-                type.addItem(new FoodTypeModel(rs.getInt("food_type_id"), rs.getString("food_type_name")));
+                FoodTypeModel model = new FoodTypeModel();
+                model.setFood_type_id(rs.getInt("food_type_id"));
+                model.setFood_type_name(rs.getString("food_type_name"));
+                foodTypeMap.put(rs.getInt("food_type_id"), model);
+                type.addItem(model);
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -336,9 +362,14 @@ public class MenuPanel extends javax.swing.JPanel {
         String categorySql = "select food_category_id,food_category_name from tbl_food_category";
         ResultSet categoryRs = sqlObj.sqlQuery(categorySql);
         try {
-            category.addItem(new FoodCategoryModel(0, "Select"));
+            foodCategoryMap.put(0, new FoodCategoryModel(0, "Select"));
+            category.addItem(foodCategoryMap.get(0));
             while (categoryRs.next()) {
-                category.addItem(new FoodCategoryModel(categoryRs.getInt("food_category_id"), categoryRs.getString("food_category_name")));
+                FoodCategoryModel model = new FoodCategoryModel();
+                model.setFood_category_id(categoryRs.getInt("food_category_id"));
+                model.setFood_category_name(categoryRs.getString("food_category_name"));
+                foodCategoryMap.put(categoryRs.getInt("food_category_id"), model);
+                category.addItem(model);
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -347,28 +378,42 @@ public class MenuPanel extends javax.swing.JPanel {
         String meatSql = "select food_meat_id,food_meat_name from tbl_meat_type";
         ResultSet meatSqlRs = sqlObj.sqlQuery(meatSql);
         try {
-            meat.addItem(new FoodMeatModel(0, "Select"));
+            foodMeatMap.put(0, new FoodMeatModel(0, "Select"));
+            meat.addItem(foodMeatMap.get(0));
             while (meatSqlRs.next()) {
-                meat.addItem(new FoodMeatModel(meatSqlRs.getInt("food_meat_id"), meatSqlRs.getString("food_meat_name")));
+                FoodMeatModel meatModel = new FoodMeatModel();
+                meatModel.setFood_meat_id(meatSqlRs.getInt("food_meat_id"));
+                meatModel.setFood_meat_name(meatSqlRs.getString("food_meat_name"));
+                foodMeatMap.put(meatSqlRs.getInt("food_meat_id"), meatModel);
+                meat.addItem(meatModel);
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
         try {
-            vegtype.addItem(new FoodVegType(0,"Select"));
-            vegtype.addItem(new FoodVegType(1,"Vegetarian"));
-            vegtype.addItem(new FoodVegType(2,"Non-Vegetarian"));
+
+            foodVegTypesMap.put(0, new FoodVegType(0, "Select"));
+            foodVegTypesMap.put(1, new FoodVegType(1, "Vegeterian"));
+            foodVegTypesMap.put(2, new FoodVegType(2, "Non-Vegeterian"));
+            vegtype.addItem(foodVegTypesMap.get(0));
+            vegtype.addItem(foodVegTypesMap.get(1));
+            vegtype.addItem(foodVegTypesMap.get(2));
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
         try {
-            time.addItem(new FoodTimingModel(0, "Select"));
-            time.addItem(new FoodTimingModel(1, "All Time"));
-            time.addItem(new FoodTimingModel(2, "Breakfast"));
-            time.addItem(new FoodTimingModel(3, "Lunch"));
-            time.addItem(new FoodTimingModel(4, "Dinner"));
+            foodTimeMap.put(0, new FoodTimingModel(0, "Select"));
+            foodTimeMap.put(1, new FoodTimingModel(1, "All Time"));
+            foodTimeMap.put(2, new FoodTimingModel(2, "Breakfast"));
+            foodTimeMap.put(3, new FoodTimingModel(3, "Lunch"));
+            foodTimeMap.put(4, new FoodTimingModel(4, "Dinner"));
+            time.addItem(foodTimeMap.get(0));
+            time.addItem(foodTimeMap.get(1));
+            time.addItem(foodTimeMap.get(2));
+            time.addItem(foodTimeMap.get(3));
+            time.addItem(foodTimeMap.get(4));
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -380,38 +425,38 @@ public class MenuPanel extends javax.swing.JPanel {
             return;
         }
         if (vegtype.getSelectedItem().toString().trim().contains("Select")) {
-           JOptionPane.showMessageDialog(null, "Please select Veg or NonVeg", "ERROR", 0);
-           return;
+            JOptionPane.showMessageDialog(null, "Please select Veg or NonVeg", "ERROR", 0);
+            return;
 
         }
         if (time.getSelectedItem().toString().trim().contains("Select")) {
-           JOptionPane.showMessageDialog(null, "Please select the available timings", "ERROR", 0);
-           return;
+            JOptionPane.showMessageDialog(null, "Please select the available timings", "ERROR", 0);
+            return;
 
         }
-        
+
         if (type.getSelectedItem().toString().trim().contains("Select")) {
-           JOptionPane.showMessageDialog(null, "Please select the menu type", "ERROR", 0);
-           return;
+            JOptionPane.showMessageDialog(null, "Please select the menu type", "ERROR", 0);
+            return;
 
         }
         if (category.getSelectedItem().toString().trim().contains("Select")) {
-           JOptionPane.showMessageDialog(null, "Please select the menu category", "ERROR", 0);
-           return;
+            JOptionPane.showMessageDialog(null, "Please select the menu category", "ERROR", 0);
+            return;
 
         }
-        
+
         if (meat.getSelectedItem().toString().trim().contains("Select")) {
-           JOptionPane.showMessageDialog(null, "Please select the meat type", "ERROR", 0);
-           return;
+            JOptionPane.showMessageDialog(null, "Please select the meat type", "ERROR", 0);
+            return;
 
         }
-        
+
         if (Utility.isNullOrEmpty(price.getText().trim())) {
             JOptionPane.showMessageDialog(null, "Price Cannot be Empty.", "ERROR", 0);
             return;
         }
-        
+
         if (!Utility.validatePhone(price.getText().trim())) {
             JOptionPane.showMessageDialog(null, "Please enter valid amount", "ERROR", 0);
             return;
@@ -425,19 +470,35 @@ public class MenuPanel extends javax.swing.JPanel {
         model.setFood_meat_id(meat.getItemAt(meat.getSelectedIndex()).getFood_meat_id());
         model.setFood_time_id(time.getItemAt(time.getSelectedIndex()).getFood_type_id());
         model.setPrice(Integer.parseInt(price.getText().trim()));
+        if (filePicker.getSelectedFilePath() != null && !filePicker.getSelectedFilePath().equals("")) {
+            try {
+                String outPath = "/Users/priyesh/Documents/Test/" + filePicker.getSelectedFilePath().substring(filePicker.getSelectedFilePath().lastIndexOf("/") + 1);
+                ImageResizer.resize(filePicker.getSelectedFilePath(), outPath, 0.2);
+                model.setImagePath(outPath);
+            } catch (IOException ex) {
+                Logger.getLogger(MenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }else{
+            model.setImagePath(savedImagePath);
+        }
         int response;
         if (addMenuItem.getText().contains("Update")) {
+            model.setMenu_id(menuId);
             response = menuService.saveOrUpdateMenu(model, false);
         } else {
+
             response = menuService.saveOrUpdateMenu(model, true);
         }
         clearAll();
         if (response == 1) {
-             getAllMenuItems();
+            getAllMenuItems();
             JOptionPane.showMessageDialog(null, "Menu Item " + model.getItem_name() + " has been updated successfully", "Success", 1);
         } else {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
         }
+
+      
     }//GEN-LAST:event_addMenuItemActionPerformed
 
     private int menuId;
@@ -447,6 +508,8 @@ public class MenuPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<FoodCategoryModel> category;
     private javax.swing.JTextField discount;
     private javax.swing.JCheckBox discountBox;
+    private javax.swing.JPanel filePanel;
+    private javax.swing.JLabel image;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -459,12 +522,10 @@ public class MenuPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JComboBox<FoodMeatModel> meat;
     private javax.swing.JTextField menuName;
     private javax.swing.JTable menuTable;
     private javax.swing.JTextField price;
-    private javax.swing.JTable shopTable1;
     private javax.swing.JComboBox<FoodTimingModel> time;
     private javax.swing.JComboBox<FoodTypeModel> type;
     private javax.swing.JComboBox<FoodVegType> vegtype;
@@ -478,12 +539,15 @@ public class MenuPanel extends javax.swing.JPanel {
         type.setSelectedIndex(0);
         meat.setSelectedIndex(0);
         category.setSelectedIndex(0);
+        filePicker.setTextField();
+        image.setIcon(new ImageIcon(""));
+        
     }
 
     private void getAllMenuItems() {
         MenuListModel menuModel = new MenuListModel();
         List<MenuListModel> menuList = menuService.getAllMenuItems();
-       
+
         String data[][] = new String[menuList.size()][9];
         for (int i = 0; i < menuList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
@@ -496,7 +560,7 @@ public class MenuPanel extends javax.swing.JPanel {
             data[i][7] = "Update";
             data[i][8] = "Delete";
         }
-        String columnNames[] = new String[]{"Sl.No.", "Item Name", "Type", "Category", "Meat","Veg Type", "Time", "", ""};
+        String columnNames[] = new String[]{"Sl.No.", "Item Name", "Type", "Category", "Meat", "Veg Type", "Time", "", ""};
         DefaultTableModel tbl = new DefaultTableModel(data, columnNames);
         menuTable.setModel(tbl);
 
@@ -514,12 +578,16 @@ public class MenuPanel extends javax.swing.JPanel {
                 menuId = menuModel.getMenu_id();
                 MenuService menuService = new MenuService();
                 menuName.setText(menuModel.getItem_name());
-                type.setSelectedItem(menuModel.getTypeModel());
-                category.setSelectedItem(menuModel.getCategoryModel());
-                vegtype.setSelectedItem(modelFoodType);
-                time.setSelectedItem(menuModel.getTimeModel());
-                meat.setSelectedItem(menuModel.getFoodMeatModel());
-                addMenuItem.setText("Update"); 
+                type.setSelectedItem(foodTypeMap.get(menuModel.getTypeModel().getFood_type_id()));
+                category.setSelectedItem(foodCategoryMap.get(menuModel.getCategoryModel().getFood_category_id()));
+                vegtype.setSelectedItem(foodVegTypesMap.get(menuModel.getFoodVegType().getFood_type_id()));
+                time.setSelectedItem(foodTimeMap.get(menuModel.getTimeModel().getFood_type_id()));
+                meat.setSelectedItem(foodMeatMap.get(menuModel.getFoodMeatModel().getFood_meat_id()));
+                if(menuModel.getImage_path() != null && !menuModel.getImage_path().equals("")){
+                    image.setIcon(new ImageIcon(menuModel.getImage_path()));
+                    savedImagePath = menuModel.getImage_path();
+                }
+                addMenuItem.setText("Update");
             }
         };
 
