@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package UI;
+
 import Services.FoodMeatService;
 import Utility.ButtonColumn;
 import java.awt.event.ActionEvent;
@@ -30,10 +31,11 @@ public class FoodMeatType extends javax.swing.JPanel {
         initComponents();
         getFoodItems();
     }
+
     public void getFoodItems() {
         FoodMeatService foodMeatService = new FoodMeatService();
         List<FoodMeatModel> foodItemList = foodMeatService.getFoodItems();
-       
+
         String data[][] = new String[foodItemList.size()][4];
         for (int i = 0; i < foodItemList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
@@ -246,9 +248,8 @@ public class FoodMeatType extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
 
         }
-        
-    }//GEN-LAST:event_addFoodActionPerformed
 
+    }//GEN-LAST:event_addFoodActionPerformed
 
     private int foodCategoryId;
     // Variables declaration - do not modify//GEN-BEGIN:variables

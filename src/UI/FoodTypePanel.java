@@ -40,12 +40,12 @@ public class FoodTypePanel extends javax.swing.JPanel {
         }
         String data[][] = new String[foodItemList.size()][4];
         for (int i = 0; i < foodItemList.size(); i++) {
-            data[i][0] = new Integer(foodItemList.get(i).getFood_type_id()).toString();
+            data[i][0] = new Integer(i + 1).toString();
             data[i][1] = foodItemList.get(i).getFood_type_name();
             data[i][2] = "Update";
             data[i][3] = "Delete";
         }
-        String columnNames[] = new String[]{"food_type_id", "food_type_name", "action", "action2"};
+        String columnNames[] = new String[]{"Sl No", "Food Type", "", ""};
         DefaultTableModel tbl = new DefaultTableModel(data, columnNames);
         foodTypeTable.setModel(tbl);
 

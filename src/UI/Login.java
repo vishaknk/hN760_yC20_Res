@@ -108,7 +108,7 @@ public class Login extends javax.swing.JFrame {
 
     private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
         // TODO add your handling code here:
-       User user = new User();
+        User user = new User();
         user.setUsername(userName.getText().trim().toString());
         user.setPassword(password.getText().trim().toString());
         LoginServices loginServices = new LoginServices();
@@ -124,7 +124,7 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Invalid Credentials", "ERROR", 0);
 
         }
-       
+
     }//GEN-LAST:event_LoginActionPerformed
 
     private void userNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userNameActionPerformed

@@ -31,11 +31,11 @@ public class StaffPanel extends javax.swing.JPanel {
         initComponents();
         getAllStaffs();
     }
-    
+
     public void getAllStaffs() {
         StaffDetailsService staffDetailsService = new StaffDetailsService();
         List<StaffDetailsModel> staffList = staffDetailsService.getStaffs();
-        
+
         String data[][] = new String[staffList.size()][8];
         for (int i = 0; i < staffList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
@@ -295,8 +295,8 @@ public class StaffPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addstaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addstaffActionPerformed
-        
-       // TODO add your handling code here:
+
+        // TODO add your handling code here:
         // validation for empty
         if (Utility.isNullOrEmpty(staff_name.getText().toString().trim().toString())) {
             JOptionPane.showMessageDialog(null, "Name Cannot be Empty.", "ERROR", 0);
@@ -356,7 +356,7 @@ public class StaffPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-     private void clearAll() {
+    private void clearAll() {
         staff_email.setText("");
         staff_mobile.setText("");
         staff_name.setText("");

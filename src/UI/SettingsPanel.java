@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 public class SettingsPanel extends javax.swing.JPanel {
 
     private JPanel visiblePanel;
+
     /**
      * Creates new form SettingsPanel
      */
@@ -129,44 +130,49 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private void foodTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodTypeActionPerformed
         // TODO add your handling code here:
-         if(visiblePanel != null)
+        if (visiblePanel != null) {
             removeMainLayout(visiblePanel, panel);
-          FoodTypePanel panels = new FoodTypePanel();
-        setMainLayout(panels,panel);
+        }
+        FoodTypePanel panels = new FoodTypePanel();
+        setMainLayout(panels, panel);
     }//GEN-LAST:event_foodTypeActionPerformed
 
     private void foodCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodCategoryActionPerformed
         // TODO add your handling code here:
-         if(visiblePanel != null)
+        if (visiblePanel != null) {
             removeMainLayout(visiblePanel, panel);
-          FoodCategory panels = new FoodCategory();
-        setMainLayout(panels,panel);
+        }
+        FoodCategory panels = new FoodCategory();
+        setMainLayout(panels, panel);
     }//GEN-LAST:event_foodCategoryActionPerformed
 
     private void shopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shopActionPerformed
         // TODO add your handling code here:\
-         if(visiblePanel != null)
+        if (visiblePanel != null) {
             removeMainLayout(visiblePanel, panel);
-          ShopeDetails panels = new ShopeDetails();
-        setMainLayout(panels,panel);
+        }
+        ShopeDetails panels = new ShopeDetails();
+        setMainLayout(panels, panel);
     }//GEN-LAST:event_shopActionPerformed
 
     private void foodMeatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodMeatActionPerformed
         // TODO add your handling code here:
-         if(visiblePanel != null)
+        if (visiblePanel != null) {
             removeMainLayout(visiblePanel, panel);
-         FoodMeatType panels = new FoodMeatType();
-        setMainLayout(panels,panel);
+        }
+        FoodMeatType panels = new FoodMeatType();
+        setMainLayout(panels, panel);
     }//GEN-LAST:event_foodMeatActionPerformed
 
     private void staffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffActionPerformed
         // TODO add your handling code here:
         // TODO add your handling code here:
-        
-         if(visiblePanel != null)
+
+        if (visiblePanel != null) {
             removeMainLayout(visiblePanel, panel);
+        }
         StaffPanel panels = new StaffPanel();
-        setMainLayout(panels,panel);
+        setMainLayout(panels, panel);
     }//GEN-LAST:event_staffActionPerformed
 
     private void setMainLayout(JPanel toAddPanel, JPanel mainPanel) {
@@ -175,7 +181,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         mainPanel.add(toAddPanel);
         mainPanel.validate();
     }
-    
+
     private void removeMainLayout(JPanel toAddPanel, JPanel mainPanel) {
         mainPanel.removeAll();
         mainPanel.validate();
