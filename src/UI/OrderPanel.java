@@ -9,6 +9,7 @@ import Interface.ProductListener;
 import Utility.OrderItem;
 import Utility.ProductButton;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -43,11 +44,12 @@ public class OrderPanel extends javax.swing.JPanel {
         foodOrdered = new OrderItemModel();
         
         JPanel content = new JPanel();
+        content.setBackground(Color.WHITE);
         ProductButton buttonData[] = new ProductButton[5];
         ButtonHandler handler=new ButtonHandler();
         
         for(int index = 0; index < 5; index++){
-            buttonData[index] = new ProductButton("Welcome to hell ", index);
+            buttonData[index] = new ProductButton("Welcome  ", index);
             buttonData[index].addProductListener(new ProductListener() {
                 @Override
                 public void clickedProducts(int i) {

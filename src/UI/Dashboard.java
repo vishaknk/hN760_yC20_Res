@@ -17,6 +17,8 @@ import javax.swing.JRootPane;
  * @author Visak
  */
 public class Dashboard extends javax.swing.JFrame {
+    
+    private JPanel visiblePanel;
 
     /**
      * Creates new form OrderDetails
@@ -27,18 +29,6 @@ public class Dashboard extends javax.swing.JFrame {
         OrderPanel orderPanel = new OrderPanel();
         setMainLayout(orderPanel, p_main);
         
-    }
-    
-    private void setMainLayout(JPanel toAddPanel, JPanel mainPanel) {
-        toAddPanel.setVisible(true);
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(toAddPanel);
-        mainPanel.validate();
-    }
-    
-    private void removeMainLayout(JPanel toAddPanel, JPanel mainPanel) {
-        mainPanel.remove(toAddPanel);
-        mainPanel.validate();
     }
 
     /**
@@ -260,13 +250,20 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void lb_orderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_orderMouseClicked
         // TODO add your handling code here:
+        if(visiblePanel != null)
+            removeMainLayout(visiblePanel, p_main);
         OrderPanel orderPanel = new OrderPanel();
+        visiblePanel = orderPanel;
         setMainLayout(orderPanel, p_main);
     }//GEN-LAST:event_lb_orderMouseClicked
 
     private void lb_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_tableMouseClicked
         // TODO add your handling code here:
+        if(visiblePanel != null)
+            removeMainLayout(visiblePanel, p_main);
+        
         TablePanel panel = new TablePanel();
+        visiblePanel = panel;
         setMainLayout(panel,p_main);
     }//GEN-LAST:event_lb_tableMouseClicked
 
@@ -277,13 +274,21 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void lb_kitchenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_kitchenMouseClicked
         // TODO add your handling code here:
+        if(visiblePanel != null)
+            removeMainLayout(visiblePanel, p_main);
+        
         FoodMeatType panel = new FoodMeatType();
+        visiblePanel = panel;
         setMainLayout(panel,p_main);
     }//GEN-LAST:event_lb_kitchenMouseClicked
 
     private void lb_payrollMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_payrollMouseClicked
         // TODO add your handling code here:
+        if(visiblePanel != null)
+            removeMainLayout(visiblePanel, p_main);
+        
         FoodCategory panel = new FoodCategory();
+        visiblePanel = panel;
         setMainLayout(panel,p_main);
     }//GEN-LAST:event_lb_payrollMouseClicked
 
@@ -293,10 +298,26 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void lb_settingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_settingsMouseClicked
         // TODO add your handling code here:
+        if(visiblePanel != null)
+            removeMainLayout(visiblePanel, p_main);
+        
         ShopeDetails panel = new ShopeDetails();
+        visiblePanel = panel;
         setMainLayout(panel,p_main);
     }//GEN-LAST:event_lb_settingsMouseClicked
 
+    private void setMainLayout(JPanel toAddPanel, JPanel mainPanel) {
+        toAddPanel.setVisible(true);
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(toAddPanel);
+        mainPanel.validate();
+    }
+    
+    private void removeMainLayout(JPanel toAddPanel, JPanel mainPanel) {
+        mainPanel.removeAll();
+        mainPanel.validate();
+    }
+    
     /**
      * @param args the command line arguments
      */
