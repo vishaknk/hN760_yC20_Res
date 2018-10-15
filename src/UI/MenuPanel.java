@@ -7,23 +7,14 @@ package UI;
 
 import DBConnection.SQLRun;
 import Services.MenuService;
-import Services.MenuService;
 import Utility.ButtonColumn;
 import Utility.ImageResizer;
 import Utility.JFilePicker;
 import Utility.Utility;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.FoodCategoryModel;
@@ -46,8 +33,6 @@ import model.FoodTypeModel;
 import model.FoodVegType;
 import model.MenuListModel;
 import model.MenuModel;
-import model.MenuModel;
-import model.ShopDetailsModel;
 
 /**
  *
@@ -478,8 +463,8 @@ public class MenuPanel extends javax.swing.JPanel {
             } catch (IOException ex) {
                 Logger.getLogger(MenuPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-        }else{
+
+        } else {
             model.setImagePath(savedImagePath);
         }
         int response;
@@ -498,7 +483,7 @@ public class MenuPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
         }
 
-      
+
     }//GEN-LAST:event_addMenuItemActionPerformed
 
     private int menuId;
@@ -541,7 +526,7 @@ public class MenuPanel extends javax.swing.JPanel {
         category.setSelectedIndex(0);
         filePicker.setTextField();
         image.setIcon(new ImageIcon(""));
-        
+
     }
 
     private void getAllMenuItems() {
@@ -583,7 +568,7 @@ public class MenuPanel extends javax.swing.JPanel {
                 vegtype.setSelectedItem(foodVegTypesMap.get(menuModel.getFoodVegType().getFood_type_id()));
                 time.setSelectedItem(foodTimeMap.get(menuModel.getTimeModel().getFood_type_id()));
                 meat.setSelectedItem(foodMeatMap.get(menuModel.getFoodMeatModel().getFood_meat_id()));
-                if(menuModel.getImage_path() != null && !menuModel.getImage_path().equals("")){
+                if (menuModel.getImage_path() != null && !menuModel.getImage_path().equals("")) {
                     image.setIcon(new ImageIcon(menuModel.getImage_path()));
                     savedImagePath = menuModel.getImage_path();
                 }

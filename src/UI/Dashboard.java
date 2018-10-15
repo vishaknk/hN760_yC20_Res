@@ -274,7 +274,12 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void lb_staffMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_staffMouseClicked
         // TODO add your handling code here:
-        new StaffDetails().setVisible(true);
+       if(visiblePanel != null)
+            removeMainLayout(visiblePanel, p_main);
+        
+        StaffPanel panel = new StaffPanel();
+        visiblePanel = panel;
+        setMainLayout(panel,p_main);
     }//GEN-LAST:event_lb_staffMouseClicked
 
     private void lb_kitchenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_kitchenMouseClicked
@@ -306,7 +311,7 @@ public class Dashboard extends javax.swing.JFrame {
         if(visiblePanel != null)
             removeMainLayout(visiblePanel, p_main);
         
-        ShopeDetails panel = new ShopeDetails();
+        SettingsPanel panel = new SettingsPanel();
         visiblePanel = panel;
         setMainLayout(panel,p_main);
     }//GEN-LAST:event_lb_settingsMouseClicked

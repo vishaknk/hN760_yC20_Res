@@ -6,20 +6,14 @@
 package UI;
 
 import Services.StaffDetailsService;
-import Services.StaffDetailsService;
 import Utility.ButtonColumn;
 import Utility.Utility;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.StaffDetailsModel;
@@ -28,29 +22,20 @@ import model.StaffDetailsModel;
  *
  * @author priyesh
  */
-public class StaffDetails extends javax.swing.JFrame {
+public class StaffPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form Login
+     * Creates new form StaffPanel
      */
-    public StaffDetails() {
+    public StaffPanel() {
         initComponents();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
-        Point newLocation = new Point(middle.x - (this.getWidth() / 2),
-                middle.y - (this.getHeight() / 2));
-        setLocation(newLocation);
-        setLayout(new BorderLayout());
-        this.setLocationRelativeTo(null);
-        //this.setUndecorated(true);
-        getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         getAllStaffs();
     }
-
+    
     public void getAllStaffs() {
         StaffDetailsService staffDetailsService = new StaffDetailsService();
         List<StaffDetailsModel> staffList = staffDetailsService.getStaffs();
-
+        
         String data[][] = new String[staffList.size()][8];
         for (int i = 0; i < staffList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
@@ -144,6 +129,8 @@ public class StaffDetails extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        staffTable = new javax.swing.JTable();
         createStaffTitle = new javax.swing.JPanel();
         name_label = new javax.swing.JLabel();
         addstaff = new javax.swing.JButton();
@@ -154,12 +141,29 @@ public class StaffDetails extends javax.swing.JFrame {
         password_label = new javax.swing.JLabel();
         mobile_label = new javax.swing.JLabel();
         staff_mobile = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        staffTable = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        staffTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Sl. No.", "Name", "Mobile", "Email", "Password", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, false, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(staffTable);
 
         createStaffTitle.setBackground(new java.awt.Color(255, 255, 255));
         createStaffTitle.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Create Food Type", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 0, 13), new java.awt.Color(102, 102, 102))); // NOI18N
@@ -201,7 +205,7 @@ public class StaffDetails extends javax.swing.JFrame {
                     .addComponent(email_label, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(name_label, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(staff_name))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 425, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(createStaffTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(staff_password, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(password_label, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,29 +241,6 @@ public class StaffDetails extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        staff_name.getAccessibleContext().setAccessibleName("Food Type Name");
-
-        staffTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Sl. No.", "Name", "Mobile", "Email", "Password", "Status"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                true, true, false, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(staffTable);
-
         jPanel1.setBackground(new java.awt.Color(0, 153, 255));
 
         jTextField1.setBackground(new java.awt.Color(0, 153, 255));
@@ -288,8 +269,8 @@ public class StaffDetails extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -308,17 +289,14 @@ public class StaffDetails extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        createStaffTitle.getAccessibleContext().setAccessibleName("Add Staff Details");
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void addstaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addstaffActionPerformed
-        // TODO add your handling code here:
+        
+       // TODO add your handling code here:
         // validation for empty
         if (Utility.isNullOrEmpty(staff_name.getText().toString().trim().toString())) {
             JOptionPane.showMessageDialog(null, "Name Cannot be Empty.", "ERROR", 0);
@@ -378,57 +356,7 @@ public class StaffDetails extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StaffDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StaffDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StaffDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StaffDetails.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new StaffDetails().setVisible(true);
-            }
-        });
-    }
-
-    private void clearAll() {
+     private void clearAll() {
         staff_email.setText("");
         staff_mobile.setText("");
         staff_name.setText("");
@@ -437,6 +365,7 @@ public class StaffDetails extends javax.swing.JFrame {
     }
 
     int staffId;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addstaff;
     private javax.swing.JPanel createStaffTitle;

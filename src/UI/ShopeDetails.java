@@ -6,23 +6,16 @@
 package UI;
 
 import Services.ShopdetailsService;
-import Services.ShopdetailsService;
 import Utility.ButtonColumn;
 import Utility.Utility;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.ShopDetailsModel;
 import model.ShopDetailsModel;
 
 /**
@@ -35,7 +28,7 @@ public class ShopeDetails extends javax.swing.JPanel {
      * Creates new form ShopeDetails
      */
     public ShopeDetails() {
-        initComponents();      
+        initComponents();
         getAllShops();
     }
 
@@ -271,7 +264,7 @@ public class ShopeDetails extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Password Cannot be Empty.", "ERROR", 0);
             return;
         }
-        
+
         if (Utility.isNullOrEmpty(address.getText().toString().trim().toString())) {
             JOptionPane.showMessageDialog(null, "Address Cannot be Empty.", "ERROR", 0);
             return;
@@ -295,7 +288,7 @@ public class ShopeDetails extends javax.swing.JPanel {
         ShopdetailsService shopdetailsService = new ShopdetailsService();
         int response;
         if (addShop.getText().contains("Update")) {
-           
+
             shop.setShop_id(shopId);
             response = shopdetailsService.saveOrUpdatehopdetails(shop, false);
         } else {
@@ -303,8 +296,8 @@ public class ShopeDetails extends javax.swing.JPanel {
         }
         clearAll();
         if (response == 1) {
-             getAllShops();
-            JOptionPane.showMessageDialog(null, "Staff " + shop.getShop_name()+ " has been updated successfully", "Success", 1);
+            getAllShops();
+            JOptionPane.showMessageDialog(null, "Staff " + shop.getShop_name() + " has been updated successfully", "Success", 1);
         } else {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
         }
@@ -312,7 +305,7 @@ public class ShopeDetails extends javax.swing.JPanel {
     public void getAllShops() {
         ShopdetailsService shopdetailsService = new ShopdetailsService();
         List<ShopDetailsModel> shopList = shopdetailsService.getAllShops();
-       
+
         String data[][] = new String[shopList.size()][8];
         for (int i = 0; i < shopList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();

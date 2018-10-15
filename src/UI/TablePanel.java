@@ -174,7 +174,7 @@ public class TablePanel extends javax.swing.JPanel {
         clearAll();
         if (response == 1) {
             getAllTables();
-            JOptionPane.showMessageDialog(null, "Table " + tableModel.getTable_name()+ " has been updated successfully", "Success", 1);
+            JOptionPane.showMessageDialog(null, "Table " + tableModel.getTable_name() + " has been updated successfully", "Success", 1);
         } else {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
 
@@ -201,7 +201,7 @@ public class TablePanel extends javax.swing.JPanel {
     private void getAllTables() {
         TableService tableService = new TableService();
         List<TableModel> shopList = tableService.getAllTables();
-       
+
         String data[][] = new String[shopList.size()][6];
         for (int i = 0; i < shopList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
