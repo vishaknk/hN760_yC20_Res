@@ -33,14 +33,15 @@ public class MenuService {
         SQLRun sqlObj = new SQLRun();
         String sql = "";
         if (isAdd) {
-            sql = "Insert into tbl_menu (item_name, food_type_id, food_veg_id, food_time_id,food_meat_id,food_category_id,price) "
+            sql = "Insert into tbl_menu (item_name, food_type_id, food_veg_id, food_time_id,food_meat_id,image_path,food_category_id,price) "
                     + "values('"
                     + menuModel.getItem_name()
                     + "','" + menuModel.getFood_type_id()
                     + "','" + menuModel.getFood_veg_id()
                     + "','" + menuModel.getFood_time_id()
                     + "','" + menuModel.getFood_meat_id()
-                    + "','" + menuModel.getFood_category_id()
+                    + "','" + menuModel.getImagePath()
+                     + "','" + menuModel.getFood_category_id()
                     + "','"
                     + menuModel.getPrice() + "')";
             status = sqlObj.sqlUpdate(sql);
@@ -53,6 +54,7 @@ public class MenuService {
                     + "food_time_id = '" + menuModel.getFood_time_id() + "', "
                     + "food_meat_id = '" + menuModel.getFood_meat_id() + "', "
                     + "food_category_id = '" + menuModel.getFood_category_id() + "', "
+                     + "image_path = '" + menuModel.getImagePath()+ "', "
                     + "price = '" + menuModel.getPrice()
                     + "' where menu_id = '" + menuModel.getMenu_id() + "'";
 
@@ -65,7 +67,7 @@ public class MenuService {
 
     public List<MenuListModel> getAllMenuItems() {
         List<MenuListModel> menuList = new ArrayList<>();
-        String sql = "select menu.item_name,menu.menu_id,menu.food_type_id, menu.food_category_id,menu.food_veg_id,menu.food_meat_id, menu.food_time_id, menu.status, menu.price, menu.food_veg_id, menu.food_time_id, tbl_food_category.food_category_name as food_category\n"
+        String sql = "select menu.item_name,menu.menu_id,menu.food_type_id,menu.image_path, menu.food_category_id,menu.food_veg_id,menu.food_meat_id, menu.food_time_id, menu.status, menu.price, menu.food_veg_id, menu.food_time_id, tbl_food_category.food_category_name as food_category\n"
                 + ", tbl_food_type.food_type_name as food_type\n"
                 + ", tbl_meat_type.food_meat_name as food_meat from tbl_menu menu \n"
                 + " left join tbl_food_category on menu.food_category_id = tbl_food_category.food_category_id\n"
@@ -78,6 +80,7 @@ public class MenuService {
             while (rs.next()) {
                 MenuListModel menu = new MenuListModel();
                 menu.setItem_name(rs.getString("item_name"));
+                menu.setImage_path(rs.getString("image_path"));
                 menu.setMenu_id(rs.getInt("menu_id"));
                 menu.setTypeModel(new FoodTypeModel(rs.getInt("food_type_id"),rs.getString("food_type")));
                 if(rs.getInt("food_veg_id") == 1){
@@ -120,7 +123,7 @@ public class MenuService {
 
         SQLRun sqlObj = new SQLRun();
         String sql = "select menu_id,item_name,food_type_id, food_veg_id, food_type_id"
-                + ",food_category_id,food_meat_id,food_time_id,status,price from tbl_menu where menu_id = '" + id + "'";
+                + ",food_category_id,food_meat_id,food_time_id,status,price, image_path from tbl_menu where menu_id = '" + id + "'";
         ResultSet rs = sqlObj.sqlQuery(sql);
         try {
             while (rs.next()) {
@@ -133,6 +136,7 @@ public class MenuService {
                 menu.setFood_time_id(rs.getInt("food_time_id"));
                 menu.setStatus(rs.getInt("status"));
                 menu.setPrice(rs.getInt("price"));
+                menu.setImagePath(rs.getString("image_path"));
             }
         } catch (Exception e) {
         }

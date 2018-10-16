@@ -174,7 +174,7 @@ public class TablePanel extends javax.swing.JPanel {
         clearAll();
         if (response == 1) {
             getAllTables();
-            JOptionPane.showMessageDialog(null, "Table " + tableModel.getTable_name()+ " has been updated successfully", "Success", 1);
+            JOptionPane.showMessageDialog(null, "Table " + tableModel.getTable_name() + " has been updated successfully", "Success", 1);
         } else {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
 
@@ -184,6 +184,7 @@ public class TablePanel extends javax.swing.JPanel {
     private void clearAll() {
         tableName.setText("");
         seatNumber.setText("");
+        addTable.setText("Create");
     }
 
     private int tableModelId;
@@ -201,15 +202,15 @@ public class TablePanel extends javax.swing.JPanel {
     private void getAllTables() {
         TableService tableService = new TableService();
         List<TableModel> shopList = tableService.getAllTables();
-       
+
         String data[][] = new String[shopList.size()][6];
         for (int i = 0; i < shopList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
             data[i][1] = shopList.get(i).getTable_name();
             data[i][2] = new Integer(shopList.get(i).getNo_of_seat()).toString();
             data[i][3] = shopList.get(i).getStatus() == 1 ? "Active" : "Inactive";
-            data[i][4] = "Update";
-            data[i][5] = "Delete";
+            data[i][4] = "Edit";
+            data[i][5] = "Deactivate";
         }
         String columnNames[] = new String[]{"Sl.No.", "Table Name", "No of Seats", "Status", "", ""};
         DefaultTableModel tbl = new DefaultTableModel(data, columnNames);
@@ -230,7 +231,7 @@ public class TablePanel extends javax.swing.JPanel {
                 TableService tableService = new TableService();
                 tableName.setText(staffModel.getTable_name());
                 seatNumber.setText(String.valueOf(staffModel.getNo_of_seat()));
-                addTable.setText("Update Table");
+                addTable.setText("Update");
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
@@ -250,29 +251,10 @@ public class TablePanel extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                    clearAll();
                     getAllTables();
                 }
 
-            }
-        };
-
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString);
-                TableModel tableModel = new TableModel();
-                tableModel.setTable_id(idVal);
-                tableModel = tableService.gettableModelById(tableModel.getTable_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
             }
         };
 

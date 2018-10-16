@@ -24,9 +24,9 @@ public class OrderDetails extends javax.swing.JFrame {
         p_main.setLayout(new BorderLayout());
         p_main.add(orderPanel);
         p_main.validate();
-        
+
     }
-    
+
     private void setMainLayout(JPanel classObject, JPanel panel) {
         classObject.setVisible(true);
         panel.setLayout(new BorderLayout());

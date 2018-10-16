@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package UI;
+
 import Services.FoodCategoryService;
 import Utility.ButtonColumn;
 import java.awt.event.ActionEvent;
@@ -30,10 +31,11 @@ public class FoodCategory extends javax.swing.JPanel {
         initComponents();
         getFoodItems();
     }
+
     public void getFoodItems() {
         FoodCategoryService foodCategoryService = new FoodCategoryService();
         List<FoodCategoryModel> foodItemList = foodCategoryService.getFoodItems();
-       
+
         String data[][] = new String[foodItemList.size()][4];
         for (int i = 0; i < foodItemList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
@@ -84,6 +86,7 @@ public class FoodCategory extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                     clearAll();
                     getFoodItems();
                 }
 
@@ -139,7 +142,7 @@ public class FoodCategory extends javax.swing.JPanel {
 
         addFood.setBackground(new java.awt.Color(0, 153, 255));
         addFood.setForeground(new java.awt.Color(255, 255, 255));
-        addFood.setText("Add food category");
+        addFood.setText("Create");
         addFood.setName("LoginBtn"); // NOI18N
         addFood.setPreferredSize(new java.awt.Dimension(122, 29));
         addFood.addActionListener(new java.awt.event.ActionListener() {
@@ -249,9 +252,8 @@ public class FoodCategory extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
 
         }
-        
-    }//GEN-LAST:event_addFoodActionPerformed
 
+    }//GEN-LAST:event_addFoodActionPerformed
 
     private int foodCategoryId;
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -264,5 +266,6 @@ public class FoodCategory extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 public void clearAll() {
         foodCategoryName.setText("");
+        addFood.setText("Create");
     }
 }

@@ -11,7 +11,15 @@ package model;
  */
 public class MenuModel {
     private int menu_id, food_category_id, food_type_id, food_meat_id, food_veg_id, food_time_id, status,discount, discount_type, price;
-    private String item_name,tax_head_id;
+    private String item_name,tax_head_id, image_path;
+
+    public String getImagePath() {
+        return image_path;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.image_path = imagePath;
+    }
 
     public int getMenu_id() {
         return menu_id;

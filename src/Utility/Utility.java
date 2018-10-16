@@ -55,6 +55,16 @@ public class Utility {
         return false;
     }
     
+     public static boolean validatePassword(String password) {
+        Pattern emailNamePtrn = Pattern.compile(
+                "^[a-zA-Z0-9]+$");
+        Matcher mtch = emailNamePtrn.matcher(password);
+        if (mtch.matches()) {
+            return true;
+        }
+        return false;
+    }
+    
     public static String getMacAddress() {
         try {
             InetAddress ip = InetAddress.getLocalHost();

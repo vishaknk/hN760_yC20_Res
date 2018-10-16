@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package UI;
+
 import Services.FoodMeatService;
 import Utility.ButtonColumn;
 import java.awt.event.ActionEvent;
@@ -30,15 +31,16 @@ public class FoodMeatType extends javax.swing.JPanel {
         initComponents();
         getFoodItems();
     }
+
     public void getFoodItems() {
         FoodMeatService foodMeatService = new FoodMeatService();
         List<FoodMeatModel> foodItemList = foodMeatService.getFoodItems();
-       
+
         String data[][] = new String[foodItemList.size()][4];
         for (int i = 0; i < foodItemList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
             data[i][1] = foodItemList.get(i).getFood_meat_name();
-            data[i][2] = "Update";
+            data[i][2] = "Edit";
             data[i][3] = "Delete";
         }
         String columnNames[] = new String[]{"Sl.No.", "Food Meat Type", "", ""};
@@ -84,31 +86,13 @@ public class FoodMeatType extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                     clearAll();
                     getFoodItems();
                 }
 
             }
         };
 
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString) + 1;
-                FoodMeatModel foodTypeModel = new FoodMeatModel();
-                foodTypeModel.setFood_meat_id(idVal);
-                foodTypeModel = foodMeatService.getFoodDetailsById(foodTypeModel.getFood_meat_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
-            }
-        };
 
         ButtonColumn buttonColumnEdit = new ButtonColumn(foodCategoryTable, update, 2);
         buttonColumnEdit.setMnemonic(KeyEvent.VK_D);
@@ -246,9 +230,8 @@ public class FoodMeatType extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
 
         }
-        
-    }//GEN-LAST:event_addFoodActionPerformed
 
+    }//GEN-LAST:event_addFoodActionPerformed
 
     private int foodCategoryId;
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -261,5 +244,6 @@ public class FoodMeatType extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 public void clearAll() {
         foodCategoryName.setText("");
+        addFood.setText("Create");
     }
 }

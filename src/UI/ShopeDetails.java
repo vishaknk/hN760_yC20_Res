@@ -6,23 +6,16 @@
 package UI;
 
 import Services.ShopdetailsService;
-import Services.ShopdetailsService;
 import Utility.ButtonColumn;
 import Utility.Utility;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import model.ShopDetailsModel;
 import model.ShopDetailsModel;
 
 /**
@@ -35,7 +28,7 @@ public class ShopeDetails extends javax.swing.JPanel {
      * Creates new form ShopeDetails
      */
     public ShopeDetails() {
-        initComponents();      
+        initComponents();
         getAllShops();
     }
 
@@ -106,7 +99,7 @@ public class ShopeDetails extends javax.swing.JPanel {
 
         addShop.setBackground(new java.awt.Color(0, 153, 255));
         addShop.setForeground(new java.awt.Color(255, 255, 255));
-        addShop.setText("Add Shop");
+        addShop.setText("Create");
         addShop.setName("LoginBtn"); // NOI18N
         addShop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -271,7 +264,7 @@ public class ShopeDetails extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Password Cannot be Empty.", "ERROR", 0);
             return;
         }
-        
+
         if (Utility.isNullOrEmpty(address.getText().toString().trim().toString())) {
             JOptionPane.showMessageDialog(null, "Address Cannot be Empty.", "ERROR", 0);
             return;
@@ -295,7 +288,6 @@ public class ShopeDetails extends javax.swing.JPanel {
         ShopdetailsService shopdetailsService = new ShopdetailsService();
         int response;
         if (addShop.getText().contains("Update")) {
-           
             shop.setShop_id(shopId);
             response = shopdetailsService.saveOrUpdatehopdetails(shop, false);
         } else {
@@ -303,8 +295,8 @@ public class ShopeDetails extends javax.swing.JPanel {
         }
         clearAll();
         if (response == 1) {
-             getAllShops();
-            JOptionPane.showMessageDialog(null, "Staff " + shop.getShop_name()+ " has been updated successfully", "Success", 1);
+            getAllShops();
+            JOptionPane.showMessageDialog(null, "Staff " + shop.getShop_name() + " has been updated successfully", "Success", 1);
         } else {
             JOptionPane.showMessageDialog(null, "Invalid", "ERROR", 0);
         }
@@ -312,7 +304,7 @@ public class ShopeDetails extends javax.swing.JPanel {
     public void getAllShops() {
         ShopdetailsService shopdetailsService = new ShopdetailsService();
         List<ShopDetailsModel> shopList = shopdetailsService.getAllShops();
-       
+
         String data[][] = new String[shopList.size()][8];
         for (int i = 0; i < shopList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
@@ -321,7 +313,7 @@ public class ShopeDetails extends javax.swing.JPanel {
             data[i][3] = shopList.get(i).getEmail_address();
             data[i][4] = shopList.get(i).getPlace();
             data[i][5] = shopList.get(i).getAddress();
-            data[i][6] = "Update";
+            data[i][6] = "Edit";
             data[i][7] = "Delete";
         }
         String columnNames[] = new String[]{"Sl.No.", "Shop Name", "Phone", "Email", "Place", "Address", "", ""};
@@ -346,7 +338,7 @@ public class ShopeDetails extends javax.swing.JPanel {
                 email.setText(staffModel.getEmail_address());
                 place.setText(staffModel.getPlace());
                 address.setText(staffModel.getAddress());
-                addShop.setText("Update Shop Details");
+                addShop.setText("Update");
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
@@ -366,29 +358,10 @@ public class ShopeDetails extends javax.swing.JPanel {
                 }
 
                 if (status == 1) {
+                    clearAll();
                     getAllShops();
                 }
 
-            }
-        };
-
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString);
-                ShopDetailsModel foodTypeModel = new ShopDetailsModel();
-                foodTypeModel.setShop_id(idVal);
-                foodTypeModel = shopdetailsService.getshopDetailsById(foodTypeModel.getShop_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
             }
         };
 
@@ -427,7 +400,7 @@ public class ShopeDetails extends javax.swing.JPanel {
         place.setText("");
         address.setText("");
         email.setText("");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        addShop.setText("Create");
     }
 
 }

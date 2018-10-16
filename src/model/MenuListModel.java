@@ -11,7 +11,15 @@ package model;
  */
 public class MenuListModel {
     private int menu_id, status, price;
-    private String item_name;
+    private String item_name,image_path;
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
 
     public FoodCategoryModel getCategoryModel() {
         return categoryModel;
