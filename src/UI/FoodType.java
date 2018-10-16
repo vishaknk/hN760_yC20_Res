@@ -57,7 +57,7 @@ public class FoodType extends javax.swing.JFrame {
         for (int i = 0; i < foodItemList.size(); i++) {
             data[i][0] = new Integer(foodItemList.get(i).getFood_type_id()).toString();
             data[i][1] = foodItemList.get(i).getFood_type_name();
-            data[i][2] = "Update";
+            data[i][2] = "Edit";
             data[i][3] = "Delete";
         }
         String columnNames[] = new String[]{"food_type_id", "food_type_name", "action", "action2"};

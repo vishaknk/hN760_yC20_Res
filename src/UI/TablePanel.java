@@ -209,8 +209,8 @@ public class TablePanel extends javax.swing.JPanel {
             data[i][1] = shopList.get(i).getTable_name();
             data[i][2] = new Integer(shopList.get(i).getNo_of_seat()).toString();
             data[i][3] = shopList.get(i).getStatus() == 1 ? "Active" : "Inactive";
-            data[i][4] = "Update";
-            data[i][5] = "Delete";
+            data[i][4] = "Edit";
+            data[i][5] = "Deactivate";
         }
         String columnNames[] = new String[]{"Sl.No.", "Table Name", "No of Seats", "Status", "", ""};
         DefaultTableModel tbl = new DefaultTableModel(data, columnNames);
@@ -255,26 +255,6 @@ public class TablePanel extends javax.swing.JPanel {
                     getAllTables();
                 }
 
-            }
-        };
-
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString);
-                TableModel tableModel = new TableModel();
-                tableModel.setTable_id(idVal);
-                tableModel = tableService.gettableModelById(tableModel.getTable_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
             }
         };
 

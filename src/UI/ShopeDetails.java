@@ -288,7 +288,6 @@ public class ShopeDetails extends javax.swing.JPanel {
         ShopdetailsService shopdetailsService = new ShopdetailsService();
         int response;
         if (addShop.getText().contains("Update")) {
-
             shop.setShop_id(shopId);
             response = shopdetailsService.saveOrUpdatehopdetails(shop, false);
         } else {
@@ -366,26 +365,6 @@ public class ShopeDetails extends javax.swing.JPanel {
             }
         };
 
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString);
-                ShopDetailsModel foodTypeModel = new ShopDetailsModel();
-                foodTypeModel.setShop_id(idVal);
-                foodTypeModel = shopdetailsService.getshopDetailsById(foodTypeModel.getShop_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
-            }
-        };
-
         ButtonColumn buttonColumnEdit = new ButtonColumn(shopTable, update, 6);
         buttonColumnEdit.setMnemonic(KeyEvent.VK_D);
         ButtonColumn buttonColumnDelete = new ButtonColumn(shopTable, delete, 7);
@@ -422,7 +401,6 @@ public class ShopeDetails extends javax.swing.JPanel {
         address.setText("");
         email.setText("");
         addShop.setText("Create");
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
