@@ -7,6 +7,7 @@ package UI;
 
 import Services.TableService;
 import Utility.ButtonColumn;
+import Utility.Utility;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -160,9 +161,14 @@ public class TablePanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please enter some table name.", "ERROR", 0);
             return;
         }
+        
+        if (Utility.validatePhone(seatNumber.getText().toString().trim())) {
+            JOptionPane.showMessageDialog(null, "Please enter seats as digits only.", "ERROR", 0);
+            return;
+        }
         TableModel tableModel = new TableModel();
         tableModel.setTable_name(tableName.getText().toString());
-
+        tableModel.setNo_of_seat(Integer.parseInt(seatNumber.getText().toString()));       
         TableService tableModelService = new TableService();
         int response;
         if (addTable.getText().contains("Update")) {

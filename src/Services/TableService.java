@@ -92,4 +92,26 @@ public class TableService {
         }
         return table;
     }
+    
+    public List<TableModel> getAllActiveTables() {
+        List<TableModel> tableList = new ArrayList<>();
+        String sql = "select table_id,table_name, no_of_seat, status  from tbl_table";
+        SQLRun sqlObj = new SQLRun();
+
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                TableModel table = new TableModel();
+                table.setTable_name(rs.getString("table_name"));
+                table.setTable_id(rs.getInt("table_id"));
+                table.setStatus(rs.getInt("status"));
+                table.setNo_of_seat(rs.getInt("no_of_seat"));
+                tableList.add(table);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tableList;
+    }
+
 }

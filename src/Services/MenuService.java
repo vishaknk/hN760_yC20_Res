@@ -21,6 +21,7 @@ import model.FoodTypeModel;
 import model.FoodVegType;
 import model.MenuListModel;
 import model.MenuModel;
+import model.ItemModel;
 
 /**
  *
@@ -41,7 +42,7 @@ public class MenuService {
                     + "','" + menuModel.getFood_time_id()
                     + "','" + menuModel.getFood_meat_id()
                     + "','" + menuModel.getImagePath()
-                     + "','" + menuModel.getFood_category_id()
+                    + "','" + menuModel.getFood_category_id()
                     + "','"
                     + menuModel.getPrice() + "')";
             status = sqlObj.sqlUpdate(sql);
@@ -54,7 +55,7 @@ public class MenuService {
                     + "food_time_id = '" + menuModel.getFood_time_id() + "', "
                     + "food_meat_id = '" + menuModel.getFood_meat_id() + "', "
                     + "food_category_id = '" + menuModel.getFood_category_id() + "', "
-                     + "image_path = '" + menuModel.getImagePath()+ "', "
+                    + "image_path = '" + menuModel.getImagePath() + "', "
                     + "price = '" + menuModel.getPrice()
                     + "' where menu_id = '" + menuModel.getMenu_id() + "'";
 
@@ -82,24 +83,24 @@ public class MenuService {
                 menu.setItem_name(rs.getString("item_name"));
                 menu.setImage_path(rs.getString("image_path"));
                 menu.setMenu_id(rs.getInt("menu_id"));
-                menu.setTypeModel(new FoodTypeModel(rs.getInt("food_type_id"),rs.getString("food_type")));
-                if(rs.getInt("food_veg_id") == 1){
-                    menu.setFoodVegType(new FoodVegType(1,"Vegetarian"));
-                }else{
-                    menu.setFoodVegType(new FoodVegType(2,"Non-Vegetarian"));
+                menu.setTypeModel(new FoodTypeModel(rs.getInt("food_type_id"), rs.getString("food_type")));
+                if (rs.getInt("food_veg_id") == 1) {
+                    menu.setFoodVegType(new FoodVegType(1, "Vegetarian"));
+                } else {
+                    menu.setFoodVegType(new FoodVegType(2, "Non-Vegetarian"));
                 }
-                menu.setCategoryModel(new FoodCategoryModel(rs.getInt("food_category_id"),rs.getString("food_category")));
-                 menu.setFoodMeatModel(new FoodMeatModel(rs.getInt("food_meat_id"),rs.getString("food_meat")));
-                if(rs.getInt("food_time_id") == 1){
-                    menu.setTimeModel(new FoodTimingModel(1,"All Time"));
-                }else if(rs.getInt("food_time_id") == 2){
-                    menu.setTimeModel(new FoodTimingModel(2,"Breakfast"));
-                }else if(rs.getInt("food_time_id") == 3){
-                    menu.setTimeModel(new FoodTimingModel(3,"Lunch"));
-                }else if(rs.getInt("food_time_id") == 4){
-                    menu.setTimeModel(new FoodTimingModel(4,"Dinner"));
-                }else{
-                    menu.setTimeModel(new FoodTimingModel(1,"All Time"));
+                menu.setCategoryModel(new FoodCategoryModel(rs.getInt("food_category_id"), rs.getString("food_category")));
+                menu.setFoodMeatModel(new FoodMeatModel(rs.getInt("food_meat_id"), rs.getString("food_meat")));
+                if (rs.getInt("food_time_id") == 1) {
+                    menu.setTimeModel(new FoodTimingModel(1, "All Time"));
+                } else if (rs.getInt("food_time_id") == 2) {
+                    menu.setTimeModel(new FoodTimingModel(2, "Breakfast"));
+                } else if (rs.getInt("food_time_id") == 3) {
+                    menu.setTimeModel(new FoodTimingModel(3, "Lunch"));
+                } else if (rs.getInt("food_time_id") == 4) {
+                    menu.setTimeModel(new FoodTimingModel(4, "Dinner"));
+                } else {
+                    menu.setTimeModel(new FoodTimingModel(1, "All Time"));
                 }
                 menu.setStatus(rs.getInt("status"));
                 menu.setPrice(rs.getInt("price"));
@@ -141,5 +142,101 @@ public class MenuService {
         } catch (Exception e) {
         }
         return menu;
+    }
+
+    public ArrayList<ItemModel> getMenuModelByVegType(int id) {
+        ArrayList<ItemModel> menuList = new ArrayList<>();
+
+        SQLRun sqlObj = new SQLRun();
+        String sql = "select menu_id,item_name,food_type_id, food_veg_id, food_type_id"
+                + ",food_category_id,food_meat_id,food_time_id,status,price, image_path from tbl_menu where food_veg_id = '" + id + "'";
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                ItemModel model = new ItemModel();
+                model.setName(rs.getString("item_name"));
+                model.setId(rs.getInt("menu_id"));
+                model.setImage(rs.getString("image_path"));
+                menuList.add(model);
+            }
+        } catch (Exception e) {
+        }
+        return menuList;
+    }
+
+    public ArrayList<ItemModel> getMenuModelByType(int id) {
+        ArrayList<ItemModel> menuList = new ArrayList<>();
+        SQLRun sqlObj = new SQLRun();
+        String sql = "select menu_id,item_name,food_type_id, food_veg_id"
+                + ",food_category_id,food_meat_id,food_time_id,status,price, image_path from tbl_menu where food_type_id = '" + id + "'";
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                ItemModel model = new ItemModel();
+                model.setName(rs.getString("item_name"));
+                model.setId(rs.getInt("menu_id"));
+                model.setImage(rs.getString("image_path"));
+                menuList.add(model);
+            }
+        } catch (Exception e) {
+        }
+        return menuList;
+    }
+
+    public ArrayList<ItemModel> getMenuModelByCategory(int id) {
+        ArrayList<ItemModel> menuList = new ArrayList<>();
+        SQLRun sqlObj = new SQLRun();
+        String sql = "select menu_id,item_name,food_type_id, food_veg_id"
+                + ",food_category_id,food_meat_id,food_time_id,status,price, image_path from tbl_menu where food_category_id = '" + id + "'";
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                ItemModel model = new ItemModel();
+                model.setName(rs.getString("item_name"));
+                model.setId(rs.getInt("menu_id"));
+                model.setImage(rs.getString("image_path"));
+                menuList.add(model);
+            }
+        } catch (Exception e) {
+        }
+        return menuList;
+    }
+
+    public ArrayList<ItemModel> getMenuModelByMeat(int id) {
+        ArrayList<ItemModel> menuList = new ArrayList<>();
+        SQLRun sqlObj = new SQLRun();
+        String sql = "select menu_id,item_name,food_type_id, food_veg_id"
+                + ",food_category_id,food_meat_id,food_time_id,status,price, image_path from tbl_menu where food_meat_id = '" + id + "'";
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                ItemModel model = new ItemModel();
+                model.setName(rs.getString("item_name"));
+                model.setId(rs.getInt("menu_id"));
+                model.setImage(rs.getString("image_path"));
+                menuList.add(model);
+            }
+        } catch (Exception e) {
+        }
+        return menuList;
+    }
+
+    public ArrayList<ItemModel> getMenuModelByTiming(int id) {
+        ArrayList<ItemModel> menuList = new ArrayList<>();
+        SQLRun sqlObj = new SQLRun();
+        String sql = "select menu_id,item_name,food_type_id, food_veg_id"
+                + ",food_category_id,food_meat_id,food_time_id,status,price, image_path from tbl_menu where food_time_id = '" + id + "'";
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                ItemModel model = new ItemModel();
+                model.setName(rs.getString("item_name"));
+                model.setId(rs.getInt("menu_id"));
+                model.setImage(rs.getString("image_path"));
+                menuList.add(model);
+            }
+        } catch (Exception e) {
+        }
+        return menuList;
     }
 }

@@ -10,6 +10,14 @@ package model;
  * @author Visak
  */
 public class ItemModel {
+
+    public ItemModel() {
+    }
+
+    public ItemModel(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
     
     private int id;
     private String name, image;

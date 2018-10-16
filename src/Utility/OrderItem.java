@@ -5,6 +5,8 @@
  */
 package Utility;
 
+import model.OrderItemModel;
+
 /**
  *
  * @author Visak
@@ -13,9 +15,15 @@ public class OrderItem extends javax.swing.JPanel {
 
     /**
      * Creates new form OrderItem
+     * @param orderedItem
      */
-    public OrderItem() {
+    public OrderItem(OrderItemModel orderedItem) {
+        
         initComponents();
+        name.setText(orderedItem.getName());
+        quantity.setText(orderedItem.getQuantity());
+        price.setText(orderedItem.getPrice());
+        
     }
 
     /**
@@ -28,13 +36,13 @@ public class OrderItem extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        name = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        quantity = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        price = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridLayout(1, 3, 1, 0));
@@ -43,14 +51,14 @@ public class OrderItem extends javax.swing.JPanel {
         jPanel1.setPreferredSize(new java.awt.Dimension(0, 0));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        jLabel1.setText("Product Name");
-        jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
+        name.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        name.setText("Product Name");
+        jPanel1.add(name, java.awt.BorderLayout.CENTER);
 
         add(jPanel1);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         jLabel2.setBackground(new java.awt.Color(255, 0, 0));
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 48)); // NOI18N
@@ -59,10 +67,10 @@ public class OrderItem extends javax.swing.JPanel {
         jLabel2.setText("-");
         jPanel2.add(jLabel2);
 
-        jLabel3.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("2");
-        jPanel2.add(jLabel3);
+        quantity.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
+        quantity.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        quantity.setText("2");
+        jPanel2.add(quantity);
 
         jLabel4.setBackground(new java.awt.Color(255, 51, 51));
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 1, 36)); // NOI18N
@@ -76,9 +84,9 @@ public class OrderItem extends javax.swing.JPanel {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.setLayout(new org.jdesktop.swingx.HorizontalLayout());
 
-        jLabel5.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        jLabel5.setText("Price");
-        jPanel3.add(jLabel5);
+        price.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        price.setText("Price");
+        jPanel3.add(price);
 
         jLabel6.setText("jLabel6");
         jPanel3.add(jLabel6);
@@ -88,14 +96,14 @@ public class OrderItem extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel name;
+    private javax.swing.JLabel price;
+    private javax.swing.JLabel quantity;
     // End of variables declaration//GEN-END:variables
 }

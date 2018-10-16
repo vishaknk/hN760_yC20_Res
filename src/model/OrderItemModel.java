@@ -10,17 +10,52 @@ package model;
  * @author Visak
  */
 public class OrderItemModel {
-    private int id;
-    private String name, image, price, quantity;
+    private int order_id,menu_id,table_id;
+    private int status = 0;
+    private String name, image, price, quantity, tax_price;
 
     public int getId() {
-        return id;
+        return order_id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.order_id = id;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getTax_price() {
+        return tax_price;
+    }
+
+    public void setTax_price(String tax_price) {
+        this.tax_price = tax_price;
+    }
+
+
+ 
+
+    public int getMenu_id() {
+        return menu_id;
+    }
+
+    public void setMenu_id(int menu_id) {
+        this.menu_id = menu_id;
+    }
+
+    public int getTable_id() {
+        return table_id;
+    }
+
+    public void setTable_id(int table_id) {
+        this.table_id = table_id;
+    }
     public String getName() {
         return name;
     }
