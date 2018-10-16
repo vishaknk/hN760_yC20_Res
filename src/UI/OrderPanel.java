@@ -5,7 +5,6 @@
  */
 package UI;
 
-import Interface.ProductListener;
 import Utility.OrderItem;
 import Utility.ProductButton;
 import java.awt.BorderLayout;
@@ -14,6 +13,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +23,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import model.ItemModel;
 import model.OrderItemModel;
+import Interface.CategoryListener;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
 
 /**
  *
@@ -29,9 +33,12 @@ import model.OrderItemModel;
  */
 public class OrderPanel extends javax.swing.JPanel {
 
-    private ItemModel foodCategoryType;
-    private OrderItemModel foodItems;
-    private OrderItemModel foodOrdered;
+    private ArrayList<ItemModel> foodCategoryType;
+    private ArrayList<ItemModel> foodCategoryList;
+    //Product list contains the price, quantity and procduct name
+    private ArrayList<OrderItemModel> foodProductList;
+    private ArrayList<OrderItemModel> foodOrderedList;
+    private CategoryItem categoryItem;
     
     /**
      * Creates new form OrderPanel
@@ -39,69 +46,24 @@ public class OrderPanel extends javax.swing.JPanel {
     public OrderPanel() {
         initComponents();
         //Model class to store the item data
-        foodCategoryType = new ItemModel();
-        foodItems = new OrderItemModel();
-        foodOrdered = new OrderItemModel();
+        foodCategoryType = new ArrayList<>();
+        foodCategoryList = new ArrayList<>();
+        foodProductList = new ArrayList<>();
+        foodOrderedList = new ArrayList<>();
         
-        JPanel content = new JPanel();
-        content.setBackground(Color.WHITE);
-        ProductButton buttonData[] = new ProductButton[5];
-        ButtonHandler handler=new ButtonHandler();
-        
-        for(int index = 0; index < 5; index++){
-            buttonData[index] = new ProductButton("Welcome  ", index);
-            buttonData[index].addProductListener(new ProductListener() {
-                @Override
-                public void clickedProducts(int i) {
-                    System.out.println(i);
-                }
-            });
-            
-            content.add(buttonData[index]);
-        }
-        sp_category.getViewport().setView(content);
-        
-        JPanel contentOrderItem = new JPanel();
-        contentOrderItem.setLayout(new GridLayout(0,4));
-        ProductButton buttonOrderItem[] = new ProductButton[100];
-        
-        for(int index = 0; index < 100; index++){
-           buttonOrderItem[index] = new ProductButton("Welcome to hell ", index);
-           contentOrderItem.add(buttonOrderItem[index]);
-        }
-        sp_product_list.getViewport().setView(contentOrderItem);
-        
-        
-        JPanel contentOrder = new JPanel();
-        contentOrder.setLayout(new BoxLayout(contentOrder, BoxLayout.Y_AXIS));
-        OrderItem orderData[] = new OrderItem[10];
-        for(int index = 0; index < 10; index++){
-            orderData[index] = new OrderItem(); 
-            contentOrder.add(orderData[index]);
-        }
-        sp_detail_list.getViewport().setView(contentOrder);
-        
-        
-        
+        //Adding category items
+        for (int index = 0; index < 5; index++) {
+            ItemModel model = new ItemModel();
+            model.setId(index);
+            model.setImage("");
+            model.setName("Test");
+            foodCategoryType.add(model);
+        }    
+        setCategoryList();
+        setProductList();
+    
     }
-
-    public class ButtonHandler implements ProductListener{   
-
-    //This method is called in case an action event occurs.For example you click on the
-    //button      
-     public void actionPerformed(ActionEvent event){
-
-         // gets the name of the button and displays in the label.
-         ProductButton btn = (ProductButton) event.getSource();
-         System.out.println(btn.getAction());
-
-     }       
-
-        @Override
-        public void clickedProducts(int i) {
-            System.out.println(i);
-        }
-    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -172,6 +134,8 @@ public class OrderPanel extends javax.swing.JPanel {
 
         sp_product_list.setBackground(new java.awt.Color(0, 255, 51));
         sp_product_list.setBorder(null);
+        sp_product_list.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        sp_product_list.setVerifyInputWhenFocusTarget(false);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -205,5 +169,110 @@ public class OrderPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane sp_detail_list;
     private javax.swing.JScrollPane sp_product_list;
     // End of variables declaration//GEN-END:variables
+
+    private void setCategoryList() {
+        JPanel content = new JPanel();
+        content.setBackground(Color.WHITE);
+        
+        ProductButton buttonData[] = new ProductButton[foodCategoryType.size()];
+        
+        for(int index = 0; index < foodCategoryType.size(); index++){
+            buttonData[index] = new ProductButton( foodCategoryType.get(index), index, CategoryListener.CATEGORY);
+            buttonData[index].addProductListener(new CategoryListener() {
+                @Override
+                public void clickedCategory(int index, ItemModel model) {
+                   System.out.println("OrderPanel: " + index);
+                   if(categoryItem != null)
+                       categoryItem.setVisible(false);
+                   categoryItem = new CategoryItem(index);
+                    if(categoryItem != null)
+                        categoryItem.setVisible(true);
+                    
+                   categoryItem.setListener(new CategoryListener() {
+                       @Override
+                       public void clickedCategory(int index, ItemModel model) {
+                           System.err.println("OrderPanel: " + model.getName());
+                            foodCategoryType.get(index).setImage(model.getImage());
+                            foodCategoryType.get(index).setName(model.getName());
+                            //Setting the category with selected value
+                            setCategoryList();
+                            //Get all the product from database using the foodCategoryType
+                            getAllProducts();
+                       }
+
+                       @Override
+                       public void clickedProducts(int index, OrderItemModel model) {
+                            
+                       }
+                   });
+                }
+
+                @Override
+                public void clickedProducts(int index, OrderItemModel model) {
+                }
+            });
+            
+            content.add(buttonData[index]);
+        }
+        sp_category.getViewport().setView(content);
+    }
+
+    private void setProductList() {
+        JPanel contentOrderItem = new JPanel();
+        GridLayout gridLayout = new GridLayout(0,4);
+        contentOrderItem.setLayout(new FlowLayout());
+        ProductButton buttonOrderItem[] = new ProductButton[foodProductList.size()];
+        
+        for(int index = 0; index < foodProductList.size(); index++){
+           buttonOrderItem[index] = new ProductButton(foodProductList.get(index), 0);
+           buttonOrderItem[index].addProductListener(new CategoryListener() {
+               @Override
+               public void clickedCategory(int index, ItemModel model) {
+                   
+               }
+
+               @Override
+               public void clickedProducts(int index, OrderItemModel model) {
+                   System.err.println("OrderPanel FoodProduct:" + model.getName());
+                   foodOrderedList.add(model);
+                   setOrderList();
+               }
+           });
+           contentOrderItem.add(buttonOrderItem[index]);
+        }
+        sp_product_list.getViewport().setView(contentOrderItem);
+    }
+    
+    private void setOrderList(){
+        JPanel contentOrder = new JPanel();
+        contentOrder.setLayout(new BoxLayout(contentOrder, BoxLayout.Y_AXIS));
+        OrderItem orderData[] = new OrderItem[foodOrderedList.size()];
+        for(int index = 0; index < foodOrderedList.size(); index++){
+            orderData[index] = new OrderItem(); 
+            contentOrder.add(orderData[index]);
+        }
+        sp_detail_list.getViewport().setView(contentOrder);
+    }
+    
+    private void getAllProducts() {
+        foodProductList.clear();
+        //Fetch from database
+        //
+        ///
+        ////
+        for(int i = 0; i < 5; i++){
+        for (int index = 0; index < 5; index++) {
+            OrderItemModel model = new OrderItemModel();
+            int x = i + index;
+            model.setId(x);
+            model.setImage("");
+            model.setName("Test"+ i + "" + index);
+            model.setPrice("" + x);
+            foodProductList.add(model);
+        } 
+        }
+        setProductList();
+    }
+    
 }
 

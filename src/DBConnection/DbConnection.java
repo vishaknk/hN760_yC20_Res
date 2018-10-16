@@ -9,9 +9,9 @@ public class DbConnection {
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_USER_NAME = "root";
-    static final String DB_PASSWORD = "root";
+    static final String DB_PASSWORD = "1234";
     static final String DB_NAME = "kot_db";
-    static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/";
+    static final String DB_URL = "jdbc:mysql://182.75.169.250:3306/";
 
     public static Connection getDbConnection() {
 

@@ -5,20 +5,21 @@
  */
 package Utility;
 
-import Interface.ProductListener;
-import UI.OrderPanel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import model.ItemModel;
+import model.OrderItemModel;
+import Interface.CategoryListener;
 
 /**
  *
@@ -26,31 +27,25 @@ import javax.swing.border.LineBorder;
  */
 public class ProductButton extends JButton implements ActionListener{
 
-    private ProductListener productListener;
-    private int index;
+    private CategoryListener productListener;
+    private ItemModel itemModel;
+    private OrderItemModel orderItemModel;
+    private int index, type = 0;
     
     public ProductButton() {
     }
-
-    public ProductButton(Icon icon) {
-        super(icon);
+    
+    public ProductButton(ItemModel model, int index, int type) {
+        this.index = index;
+        this.itemModel = model;
+        this.type = type;
+        setDesign();
     }
-
-    public ProductButton(String text, int idex) {
-        super(text);
-        this.index = idex;
-        this.setForeground(Color.WHITE);
-        this.setBackground(new Color(8,140,234));
-        Border line = new LineBorder(Color.BLACK);
-        Border margin = new EmptyBorder(5, 5, 5, 5);
-        Border compound = new CompoundBorder(null, margin);
-        this.setPreferredSize(new Dimension(90, 90));
-        this.setBorder(compound);
-        //this.setIcon(new ImageIcon("/Users/Visak/Documents/Personal/Freelance/Resturant/src/Images/home.png"));
-        this.setHorizontalTextPosition(CENTER);
-        this.setVerticalTextPosition(BOTTOM);
-        this.setFocusPainted(false);
-        this.addActionListener(this);
+    
+    public ProductButton(OrderItemModel model, int index) {
+        this.orderItemModel = model;
+        this.index = index;
+        setDesign();
     }
     
     public ProductButton(Icon icon, String text){
@@ -60,15 +55,56 @@ public class ProductButton extends JButton implements ActionListener{
         this.setFocusPainted(false);
         this.setContentAreaFilled(false);
     }
+    
+    public void setDesign() {
+        if(type == CategoryListener.CATEGORY) {
+            this.setText(itemModel.getName());
+            ImageIcon img = new ImageIcon(itemModel.getImage() + "/Users/Visak/Downloads/IMG_7523.JPG");
+            Image image = img.getImage();
+            Image newimg = image.getScaledInstance( 60, 60,  java.awt.Image.SCALE_SMOOTH ) ;  
+   
+            this.setIcon(new ImageIcon(newimg));
+        } else {
+            this.setText(orderItemModel.getName());
+            ImageIcon img = new ImageIcon(orderItemModel.getImage() + "/Users/Visak/Downloads/IMG_7523.JPG");
+            Image image = img.getImage();
+            Image newimg = image.getScaledInstance( 60, 60,  java.awt.Image.SCALE_SMOOTH ) ;  
+   
+            this.setIcon(new ImageIcon(newimg));
+        }
+        this.setForeground(Color.WHITE);
+        this.setBackground(new Color(8,140,234));
+        Border line = new LineBorder(Color.BLACK);
+        Border margin = new EmptyBorder(5, 5, 5, 5);
+        Border compound = new CompoundBorder(null, margin);
+        this.setPreferredSize(new Dimension(90, 90));
+        this.setBorder(compound);
+        //this.setIcon(resizeIcon(new ImageIcon(model.getImage() + "/Users/Visak/Downloads/PM9A5899.JPG"), this.getWidth() - this.getInsets().left, this.getHeight() - this.getInsets().left));
+        this.setHorizontalTextPosition(CENTER);
+        this.setVerticalTextPosition(BOTTOM);
+        this.setFocusPainted(false);
+        this.addActionListener(this);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        productListener.clickedProducts(index);
-        System.out.println(e.getActionCommand());
+        if(type == CategoryListener.CATEGORY) {
+            System.out.println("ProductButton: " + e.getActionCommand());
+            productListener.clickedCategory(index, itemModel);
+        } else {
+            System.out.println("ProductButton: " + e.getActionCommand());
+            productListener.clickedProducts(index, orderItemModel);
+        }
     }
 
-    public void addProductListener(ProductListener listener) {
+    public void addProductListener(CategoryListener listener) {
         this.productListener = listener;
+    }
+    
+    private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight, java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
     }
   
 }
