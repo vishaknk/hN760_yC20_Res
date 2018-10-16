@@ -19,7 +19,15 @@ public class ItemModel {
         this.name = name;
     }
     
-    private int id;
+    private int id, selected = -1;
+
+    public int getSelected() {
+        return selected;
+    }
+
+    public void setSelected(int selected) {
+        this.selected = selected;
+    }
     private String name, image;
 
     public int getId() {

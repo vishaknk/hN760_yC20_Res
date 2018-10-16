@@ -60,7 +60,7 @@ public class CategoryItem extends javax.swing.JFrame {
                 //Adding category items
                 for (int index = 0; index < categoryModels.size(); index++) {
                     ItemModel model = new ItemModel();
-                    model.setId(categoryModels.get(index).getFood_category_id());
+                    model.setSelected(categoryModels.get(index).getFood_category_id());
                     model.setImage("");
                     model.setName(categoryModels.get(index).getFood_category_name());
                     foodCategoryType.add(model);
@@ -73,7 +73,7 @@ public class CategoryItem extends javax.swing.JFrame {
                 //Adding category items
                 for (int index = 0; index < foodTypeModels.size(); index++) {
                     ItemModel model = new ItemModel();
-                    model.setId(foodTypeModels.get(index).getFood_type_id());
+                    model.setSelected(foodTypeModels.get(index).getFood_type_id());
                     model.setImage("");
                     model.setName(foodTypeModels.get(index).getFood_type_name());
                     foodCategoryType.add(model);
@@ -86,7 +86,7 @@ public class CategoryItem extends javax.swing.JFrame {
                 //Adding category items
                 for (int index = 0; index < foodMeatModels.size(); index++) {
                     ItemModel model = new ItemModel();
-                    model.setId(foodMeatModels.get(index).getFood_meat_id());
+                    model.setSelected(foodMeatModels.get(index).getFood_meat_id());
                     model.setImage("");
                     model.setName(foodMeatModels.get(index).getFood_meat_name());
                     foodCategoryType.add(model);
@@ -95,34 +95,34 @@ public class CategoryItem extends javax.swing.JFrame {
             case 0:
               
                 ItemModel model = new ItemModel();
-                    model.setId(1);
+                    model.setSelected(1);
                     model.setImage("");
                     model.setName("Vegeterian");
                     foodCategoryType.add(model);
                     model = new ItemModel();
-                    model.setId(2);
+                    model.setSelected(2);
                     model.setImage("");
                     model.setName("Non-Vegeterian");
                     foodCategoryType.add(model);
                 break;
             case 1:
                  ItemModel models = new ItemModel();
-                  models.setId(1);
+                  models.setSelected(1);
                     models.setImage("");
                     models.setName("All Time");
                     foodCategoryType.add(models);
                     models = new ItemModel();
-                  models.setId(2);
+                  models.setSelected(2);
                     models.setImage("");
                     models.setName("Breakfast");
                     foodCategoryType.add(models);
                     models = new ItemModel();
-                  models.setId(3);
+                  models.setSelected(3);
                     models.setImage("");
                     models.setName("Lunch");
                     foodCategoryType.add(models);
                     models = new ItemModel();
-                  models.setId(4);
+                  models.setSelected(4);
                     models.setImage("");
                     models.setName("Dinner");
                     foodCategoryType.add(models);
@@ -136,7 +136,7 @@ public class CategoryItem extends javax.swing.JFrame {
                 tableList = tableService.getAllActiveTables();
                 for (int index = 0; index < tableList.size(); index++) {
                     ItemModel item = new ItemModel();
-                    item.setId(tableList.get(index).getTable_id());
+                    item.setSelected(tableList.get(index).getTable_id());
                     item.setImage("");
                     item.setName(tableList.get(index).getTable_name());
                     foodCategoryType.add(item);

@@ -52,11 +52,11 @@ public class OrderPanel extends javax.swing.JPanel {
         foodCategoryList = new ArrayList<>();
         foodProductList = new ArrayList<>();
         foodOrderedList = new ArrayList<>();
-        foodCategoryType.add(new ItemModel(0,"Veg Type"));
-        foodCategoryType.add(new ItemModel(1,"Timing"));
-        foodCategoryType.add(new ItemModel(2,"Type"));
-        foodCategoryType.add(new ItemModel(3,"Category"));
-        foodCategoryType.add(new ItemModel(4,"Meat"));
+        foodCategoryType.add(new ItemModel(0, "Veg Type"));
+        foodCategoryType.add(new ItemModel(1, "Timing"));
+        foodCategoryType.add(new ItemModel(2, "Type"));
+        foodCategoryType.add(new ItemModel(3, "Category"));
+        foodCategoryType.add(new ItemModel(4, "Meat"));
 
         setCategoryList();
         setProductList();
@@ -77,7 +77,7 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        tableButton = new javax.swing.JButton();
         sp_category = new javax.swing.JScrollPane();
         sp_product_list = new javax.swing.JScrollPane();
 
@@ -118,10 +118,10 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 51, 0));
         jPanel1.setPreferredSize(new java.awt.Dimension(0, 100));
 
-        jButton1.setText("Tables");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        tableButton.setText("Tables");
+        tableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                tableButtonActionPerformed(evt);
             }
         });
 
@@ -130,12 +130,12 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+            .addComponent(tableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
         );
 
         sp_category.setBackground(new java.awt.Color(255, 102, 102));
@@ -168,7 +168,7 @@ public class OrderPanel extends javax.swing.JPanel {
         add(jPanel3);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void tableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableButtonActionPerformed
         // TODO add your handling code here:
         categoryItem = new CategoryItem(5);
         if (categoryItem != null) {
@@ -179,7 +179,7 @@ public class OrderPanel extends javax.swing.JPanel {
             @Override
             public void clickedCategory(int index, ItemModel model) {
                 getAllProductsForTable(model.getId());
-               
+                tableButton.setText(model.getName());
 
             }
 
@@ -188,11 +188,10 @@ public class OrderPanel extends javax.swing.JPanel {
 
             }
         });
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_tableButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -200,6 +199,7 @@ public class OrderPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane sp_category;
     private javax.swing.JScrollPane sp_detail_list;
     private javax.swing.JScrollPane sp_product_list;
+    private javax.swing.JButton tableButton;
     // End of variables declaration//GEN-END:variables
 
     private void setCategoryList() {
@@ -228,15 +228,55 @@ public class OrderPanel extends javax.swing.JPanel {
                             System.err.println("OrderPanel: " + model.getName());
                             foodCategoryType.get(index).setImage(model.getImage());
                             foodCategoryType.get(index).setName(model.getName());
+                            foodCategoryType.get(index).setSelected(model.getSelected());
                             //Setting the category with selected value
                             setCategoryList();
                             //Get all the product from database using the foodCategoryType
-                            getAllProducts(index,model.getId());
+
+                            getQuery();
                         }
 
                         @Override
                         public void clickedProducts(int index, OrderItemModel model) {
 
+                        }
+
+                        private void getQuery() {
+                            String querybuild = "select menu_id,item_name,food_type_id, food_veg_id, food_type_id, food_category_id,food_meat_id,food_time_id,status,price, image_path from tbl_menu ";
+                            String where = "";
+                            String condition = "";
+                            for (int i = 0; i < foodCategoryType.size(); i++) {
+                                if (i == 0 && foodCategoryType.get(i).getSelected() >= 0) {
+                                    condition = " food_veg_id = '" + foodCategoryType.get(i).getSelected() + "'";
+                                    continue;
+                                }
+                                if (i == 1 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                    condition = condition.equals("") ? condition + " food_time_id = '" + foodCategoryType.get(i).getSelected() + "'" : condition
+                                            + " AND food_time_id = '" + foodCategoryType.get(i).getSelected() + "'";
+                                    continue;
+                                }
+                                if (i == 2 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                    condition = condition.equals("") ? condition + " food_type_id = '" + foodCategoryType.get(i).getSelected() + "'"
+                                            : condition + " AND food_type_id = '" + foodCategoryType.get(i).getSelected();
+                                    continue;
+                                }
+                                if (i == 3 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                    condition = condition.equals("") ? condition + " food_category_id = '" + foodCategoryType.get(i).getSelected() + "'"
+                                            : condition + " AND food_category_id = '" + foodCategoryType.get(i).getSelected();
+                                    continue;
+                                }
+                                if (i == 4 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                    condition = condition.equals("") ? condition + " food_meat_id = '" + foodCategoryType.get(i).getSelected() + "'"
+                                            : " AND food_meat_id = '" + foodCategoryType.get(i).getSelected();
+                                    continue;
+                                }
+                            }
+
+                            if (!condition.equals("")) {
+                                where = " where ";
+                                querybuild = querybuild + where + condition;
+                            }
+                            getAllProducts(querybuild);
                         }
                     });
                 }
@@ -288,39 +328,17 @@ public class OrderPanel extends javax.swing.JPanel {
         sp_detail_list.getViewport().setView(contentOrder);
     }
 
-    private void getAllProducts(int index, int id) {
+    private void getAllProducts(String querybuild) {
         foodProductList.clear();
         MenuService menuService = new MenuService();
-        switch(index){
-            case 0 :
-                foodCategoryList = menuService.getMenuModelByVegType(id);
-                break;
-                case 1 :
-                
-                foodCategoryList = menuService.getMenuModelByTiming(id);
-                break;
-                case 2 :
-               
-                foodCategoryList = menuService.getMenuModelByType(id);
-                break;
-                case 3 :
-                
-                foodCategoryList = menuService.getMenuModelByCategory(id);
-                break;
-                
-                case 4 :
-                
-                foodCategoryList = menuService.getMenuModelByMeat(id);
-                break;
-                
-        }
+        foodCategoryList = menuService.getMenuOnTable(querybuild);
         for (int i = 0; i < foodCategoryList.size(); i++) {
-                OrderItemModel model = new OrderItemModel();
-                model.setId(foodCategoryList.get(i).getId());
-                model.setImage(foodCategoryList.get(i).getImage());
-                model.setName(foodCategoryList.get(i).getName());
-                foodProductList.add(model);
-            }
+            OrderItemModel model = new OrderItemModel();
+            model.setId(foodCategoryList.get(i).getId());
+            model.setImage(foodCategoryList.get(i).getImage());
+            model.setName(foodCategoryList.get(i).getName());
+            foodProductList.add(model);
+        }
         setProductList();
     }
 

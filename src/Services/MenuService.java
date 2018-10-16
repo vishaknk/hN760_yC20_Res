@@ -239,4 +239,22 @@ public class MenuService {
         }
         return menuList;
     }
+    
+    public ArrayList<ItemModel> getMenuOnTable(String query) {
+        ArrayList<ItemModel> menuList = new ArrayList<>();
+
+        SQLRun sqlObj = new SQLRun();
+        ResultSet rs = sqlObj.sqlQuery(query);
+        try {
+            while (rs.next()) {
+                ItemModel model = new ItemModel();
+                model.setName(rs.getString("item_name"));
+                model.setId(rs.getInt("menu_id"));
+                model.setImage(rs.getString("image_path"));
+                menuList.add(model);
+            }
+        } catch (Exception e) {
+        }
+        return menuList;
+    }
 }
