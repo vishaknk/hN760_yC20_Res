@@ -136,8 +136,9 @@ public class CategoryItem extends javax.swing.JFrame {
                 tableList = tableService.getAllActiveTables();
                 for (int index = 0; index < tableList.size(); index++) {
                     ItemModel item = new ItemModel();
-                    item.setSelected(tableList.get(index).getTable_id());
+                    item.setId(tableList.get(index).getTable_id());
                     item.setImage("");
+                    item.setSelected(tableList.get(index).getNo_of_seat());
                     item.setName(tableList.get(index).getTable_name());
                     foodCategoryType.add(item);
                 }

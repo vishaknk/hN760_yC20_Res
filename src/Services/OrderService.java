@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -51,7 +52,7 @@ public class OrderService {
         try {
             while (rs.next()) {
                 OrderItemModel orderItem = new OrderItemModel();
-                orderItem.setId(rs.getInt("order_id"));
+                orderItem.setOrder_id(rs.getString("order_id"));
                 orderItem.setMenu_id(rs.getInt("menu_id"));
                 orderItem.setTable_id(rs.getInt("table_id"));
 
@@ -71,19 +72,19 @@ public class OrderService {
 
     public ArrayList<OrderItemModel> getAcitveOrderByTableId(int id) {
         ArrayList<OrderItemModel> orderList = new ArrayList<>();
-        String sql = "select o.menu_id,o.order_id,o.table_id,o.price as amount,o.quantity, o.tax_price,o.discount, o.total_price, o.status, m.item_name as name, m.price as price from tbl_order o  left join tbl_menu  m on o.menu_id = m.menu_id where o.table_id = '" + id + "' AND o.status ='1'";
+        String sql = "select m.menu_id,o.table_id,  o.status, m.item_name as name ,o.customer_name,o.order_id as oid, so.order_id as order_id,so.menu_id from tbl_order o \n" +
+"left join tbl_order_sub so on o.order_id = so.order_id\n" +
+"left join tbl_menu m on m.menu_id = so.menu_id where o.table_id = '" + id + "' AND o.status ='1'";
         SQLRun sqlObj = new SQLRun();
 
         ResultSet rs = sqlObj.sqlQuery(sql);
         try {
             while (rs.next()) {
                 OrderItemModel orderItem = new OrderItemModel();
-                orderItem.setId(rs.getInt("order_id"));
+                orderItem.setOrder_id(rs.getString("order_id"));
                 orderItem.setMenu_id(rs.getInt("menu_id"));
                 orderItem.setTable_id(rs.getInt("table_id"));
-                orderItem.setName(rs.getString("name"));
-                orderItem.setPrice(rs.getString("price"));
-                orderItem.setQuantity(rs.getString("quantity"));
+                orderItem.setName(rs.getString("customer_name"));
 
                 orderList.add(orderItem);
             }
@@ -91,5 +92,36 @@ public class OrderService {
             e.printStackTrace();
         }
         return orderList;
+    }
+
+    public int saveOrderInMainOrderTable(OrderItemModel orderItemModel, boolean isAdd) { //To change body of generated methods, choose Tools | Templates.
+        int status = 0;
+        SQLRun sqlObj = new SQLRun();
+        String sql = "";
+        String orderId = UUID.randomUUID().toString();
+        if (isAdd) {
+            sql = "Insert into tbl_order (order_id,customer_name, table_id,no_of_seating ) "
+                    + "values('" + orderId +"','"+ orderId+ "', '" + orderItemModel.getTable_id()
+                    + "', '" + orderItemModel.getNo_of_seating()+ "')";
+            status = sqlObj.sqlUpdate(sql);
+            //save order details to suborder table
+            if(status == 1){
+                String subInsert = "";
+                 sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price) "
+                    + "values('" +orderId +"','"+ orderItemModel.getMenu_id()
+                         + "', '" + orderItemModel.getQuantity()+ "', '" + orderItemModel.getPrice()+ "')";
+            status = sqlObj.sqlUpdate(sql);
+                
+            }
+
+        } else {
+//            sql = "update tbl_food_type set food_type_name = '" + foodTypeModel.getFood_type_name()
+//                    + "' where food_type_id = '" + foodTypeModel.getFood_type_id() + "'";
+
+//            status = sqlObj.sqlUpdate(sql);
+
+        }
+
+        return status;
     }
 }

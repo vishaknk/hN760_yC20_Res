@@ -28,6 +28,7 @@ import Services.MenuService;
 import Services.OrderService;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -41,6 +42,8 @@ public class OrderPanel extends javax.swing.JPanel {
     private ArrayList<OrderItemModel> foodProductList;
     private ArrayList<OrderItemModel> foodOrderedList;
     private CategoryItem categoryItem;
+    private String tableSelected ="";
+    private int tableId, noOfSeats = 0;
 
     /**
      * Creates new form OrderPanel
@@ -78,6 +81,8 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         tableButton = new javax.swing.JButton();
+        save = new javax.swing.JButton();
+        print = new javax.swing.JButton();
         sp_category = new javax.swing.JScrollPane();
         sp_product_list = new javax.swing.JScrollPane();
 
@@ -125,17 +130,41 @@ public class OrderPanel extends javax.swing.JPanel {
             }
         });
 
+        save.setText("Save");
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
+            }
+        });
+
+        print.setText("Print");
+        print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(tableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(save)
+                    .addComponent(print))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+            .addComponent(tableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(save)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(print)
+                .addContainerGap())
         );
 
         sp_category.setBackground(new java.awt.Color(255, 102, 102));
@@ -180,6 +209,9 @@ public class OrderPanel extends javax.swing.JPanel {
             public void clickedCategory(int index, ItemModel model) {
                 getAllProductsForTable(model.getId());
                 tableButton.setText(model.getName());
+                tableSelected = model.getName();
+                tableId = model.getId();
+                noOfSeats = model.getSelected();
 
             }
 
@@ -190,12 +222,41 @@ public class OrderPanel extends javax.swing.JPanel {
         });
     }//GEN-LAST:event_tableButtonActionPerformed
 
+    private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
+        // TODO add your handling code here:
+        if(tableSelected.equals("")){
+            JOptionPane.showMessageDialog(null, "Please Select Table.", "ERROR", 0);
+            return;
+        }
+        if(foodOrderedList.size() <= 0){
+            JOptionPane.showMessageDialog(null, "Please take at least one order.", "ERROR", 0);
+            return;
+        }
+        OrderService service = new OrderService();
+        for(int i = 0 ; i< foodOrderedList.size();i++){
+            foodOrderedList.get(i).setTable_id(tableId);
+            foodOrderedList.get(i).setNo_of_seating(noOfSeats);
+            int orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), true);
+           
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_saveActionPerformed
+
+    private void printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_printActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JButton print;
+    private javax.swing.JButton save;
     private javax.swing.JScrollPane sp_category;
     private javax.swing.JScrollPane sp_detail_list;
     private javax.swing.JScrollPane sp_product_list;
