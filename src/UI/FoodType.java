@@ -110,25 +110,6 @@ public class FoodType extends javax.swing.JFrame {
             }
         };
 
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString);
-                FoodTypeModel foodTypeModel = new FoodTypeModel();
-                foodTypeModel.setFood_type_id(idVal);
-                foodTypeModel = foodItemService.getFoodDetailsById(foodTypeModel.getFood_type_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
-            }
-        };
 
         ButtonColumn buttonColumnEdit = new ButtonColumn(foodTypeTable, update, 2);
         buttonColumnEdit.setMnemonic(KeyEvent.VK_D);

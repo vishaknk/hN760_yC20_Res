@@ -59,7 +59,7 @@ public class StaffDetails extends javax.swing.JFrame {
             data[i][3] = staffList.get(i).getEmail();
             data[i][4] = staffList.get(i).getPassword();
             data[i][5] = staffList.get(i).getStatus() == 1 ? "Active" : "Inactive";
-            data[i][6] = "Update";
+            data[i][6] = "Edit";
             data[i][7] = "Delete";
         }
         String columnNames[] = new String[]{"Sl.No.", "Name", "Mobile", "Email", "Password", "Status", "", ""};
@@ -109,25 +109,6 @@ public class StaffDetails extends javax.swing.JFrame {
             }
         };
 
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString);
-                StaffDetailsModel foodTypeModel = new StaffDetailsModel();
-                foodTypeModel.setUser_id(idVal);
-                foodTypeModel = staffDetailsService.getFoodDetailsById(foodTypeModel.getUser_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
-            }
-        };
 
         ButtonColumn buttonColumnEdit = new ButtonColumn(staffTable, update, 6);
         buttonColumnEdit.setMnemonic(KeyEvent.VK_D);

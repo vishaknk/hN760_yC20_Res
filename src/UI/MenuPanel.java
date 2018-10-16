@@ -543,7 +543,7 @@ public class MenuPanel extends javax.swing.JPanel {
             data[i][4] = menuList.get(i).getFoodMeatModel().getFood_meat_name();
             data[i][5] = menuList.get(i).getFoodVegType().getFood_type_name();
             data[i][6] = menuList.get(i).getTimeModel().getFood_type_name();
-            data[i][7] = "Update";
+            data[i][7] = "Edit";
             data[i][8] = "Delete";
         }
         String columnNames[] = new String[]{"Sl.No.", "Item Name", "Type", "Category", "Meat", "Veg Type", "Time", "", ""};

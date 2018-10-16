@@ -40,7 +40,7 @@ public class FoodCategory extends javax.swing.JPanel {
         for (int i = 0; i < foodItemList.size(); i++) {
             data[i][0] = new Integer(i + 1).toString();
             data[i][1] = foodItemList.get(i).getFood_category_name();
-            data[i][2] = "Update";
+            data[i][2] = "Edit";
             data[i][3] = "Delete";
         }
         String columnNames[] = new String[]{"Sl.No.", "Food Category", "", ""};
@@ -93,25 +93,6 @@ public class FoodCategory extends javax.swing.JPanel {
             }
         };
 
-        Action updatecustomer = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTable table = (JTable) e.getSource();
-                int modelRow = Integer.valueOf(e.getActionCommand());
-                String idValString = (String) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-                int idVal = Integer.parseInt(idValString) + 1;
-                FoodCategoryModel foodTypeModel = new FoodCategoryModel();
-                foodTypeModel.setFood_category_id(idVal);
-                foodTypeModel = foodCategoryService.getFoodDetailsById(foodTypeModel.getFood_category_id());
-
-//                Utility.visiblePanel.setVisible(false);
-//                Utility.ticketForm = new TicketForm();
-//                Utility.ticketForm.fillInCustomerDetails(customer);
-//                 Utility.visiblePanel=Utility.ticketForm;
-//                Utility.visiblePanel.setVisible(true);
-//                Utility.skelitionForm.add(Utility.visiblePanel);
-            }
-        };
 
         ButtonColumn buttonColumnEdit = new ButtonColumn(foodCategoryTable, update, 2);
         buttonColumnEdit.setMnemonic(KeyEvent.VK_D);
