@@ -6,6 +6,7 @@
 package Services;
 
 import DBConnection.SQLRun;
+import Utility.Utility;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,17 +134,37 @@ public class OrderService {
         SQLRun sqlObj = new SQLRun();
         String sql = "";
         String orderId = UUID.randomUUID().toString();
+        int total = 0, quantity = 0, price = 0;
+        try{
+        total = 0;
+        if(orderItemModel.getPrice() == null){
+            price = 0;
+        }else{
+            price = Integer.parseInt(orderItemModel.getPrice());
+        }
+        if(orderItemModel.getQuantity() == null){
+            quantity = 0;
+        }else{
+            quantity = Integer.parseInt(orderItemModel.getQuantity());
+        }
+        total = price * quantity;
+        }catch(Exception e){
+            total = 0;
+            e.printStackTrace();
+        }
         if (isAdd) {
-            sql = "Insert into tbl_order (order_id,customer_name, table_id,no_of_seating ) "
-                    + "values('" + orderId +"','"+ orderItemModel.getCustomer_name()+ "', '" + orderItemModel.getTable_id()
+            sql = "Insert into tbl_order (order_id,customer_name, table_id,no_of_seating, staff_id ) "
+                    + "values('" + orderId +"','"+ orderItemModel.getCustomer_name()+ "', '" + orderItemModel.getTable_id() +
+                     "', '" + Utility.USER_ID
                     + "', '" + orderItemModel.getNo_of_seating()+ "')";
             status = sqlObj.sqlUpdate(sql);
             //save order details to suborder table
             if(status == 1){
                 String subInsert = "";
-                 sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price) "
+                 sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price, total_price) "
                     + "values('" +orderId +"','"+ orderItemModel.getMenu_id()
-                         + "', '" + orderItemModel.getQuantity()+ "', '" + orderItemModel.getPrice()+ "')";
+                         + "', '" + orderItemModel.getQuantity()+ "', '" + orderItemModel.getPrice()
+                         + "', '" + total + "')";
             finalStatus = sqlObj.sqlUpdate(sql);
                 
             }
@@ -151,7 +172,8 @@ public class OrderService {
         } else {
             sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price) "
                     + "values('" +orderItemModel.getOrder_id() +"','"+ orderItemModel.getMenu_id()
-                         + "', '" + orderItemModel.getQuantity()+ "', '" + orderItemModel.getPrice()+ "')";
+                         + "', '" + orderItemModel.getQuantity()+ "', '" + orderItemModel.getPrice()
+                    + "', '" + total + "')";
 
             finalStatus = sqlObj.sqlUpdate(sql);
 
@@ -162,7 +184,7 @@ public class OrderService {
     
     public ArrayList<OrderItemModel> getAcitveOrderByOrderId(String orderId,int TableID) {
         ArrayList<OrderItemModel> orderList = new ArrayList<>();
-        String sql = "select m.menu_id,o.table_id, m.item_name as name,m.image_path as image ,o.customer_name,o.order_id as oid,"
+        String sql = "select m.menu_id,o.table_id, m.item_name as name,m.image_path as image ,so.quantity,so.price,o.customer_name,o.order_id as oid,"
                 + " so.order_id as order_id, so.menu_id from tbl_order o left join tbl_order_sub so "
                 + "on o.order_id = so.order_id left join tbl_menu m on m.menu_id = so.menu_id "
                 + "where o.table_id = '"+TableID+"' AND so.order_id ='"+orderId+"'";
@@ -177,6 +199,8 @@ public class OrderService {
                 orderItem.setTable_id(rs.getInt("table_id"));
                 orderItem.setName(rs.getString("name"));
                 orderItem.setImage(rs.getString("image"));
+                orderItem.setQuantity(rs.getString("quantity"));
+                orderItem.setPrice(rs.getString("price"));
 
                 orderList.add(orderItem);
             }

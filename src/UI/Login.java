@@ -116,6 +116,7 @@ public class Login extends javax.swing.JFrame {
         if (user != null) {
             Utility.ROLE = user.getRole();
             Utility.NAME = user.getUsername();
+            Utility.USER_ID = user.getId();
             System.out.println(Utility.ROLE);
             new Dashboard().setVisible(true);
             this.setVisible(false);

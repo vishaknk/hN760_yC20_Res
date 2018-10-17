@@ -23,7 +23,7 @@ public class Utility {
 
     public static String ROLE = "Admin";
     public static String NAME = "";
-    public static int ID = 1;
+    public static int USER_ID = 1;
     public static int user_id;
     public static SimpleDateFormat mysql = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat mysqldatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

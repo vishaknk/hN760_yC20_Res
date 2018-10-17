@@ -43,6 +43,7 @@ public class OrderPanel extends javax.swing.JPanel {
     //Product list contains the price, quantity and procduct name
     private ArrayList<OrderItemModel> foodProductList;
     private ArrayList<OrderItemModel> foodOrderedList;
+    private ArrayList<Integer>menuIdArray;
     private CategoryItem categoryItem;
     private String tableSelected = "";
     private int tableId, noOfSeats = 0;
@@ -54,11 +55,12 @@ public class OrderPanel extends javax.swing.JPanel {
     public OrderPanel() {
         initComponents();
         //Model class to store the item data
-        
+
         foodCategoryList = new ArrayList<>();
         foodProductList = new ArrayList<>();
         foodOrderedList = new ArrayList<>();
         customerList = new ArrayList<>();
+        menuIdArray = new ArrayList<>();
         setCAtegoryType();
         setCategoryList();
         setProductList();
@@ -209,6 +211,7 @@ public class OrderPanel extends javax.swing.JPanel {
 
     private void tableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableButtonActionPerformed
         // TODO add your handling code here:
+        menuIdArray.clear();
         categoryItem = new CategoryItem(5);
         if (categoryItem != null) {
             categoryItem.setVisible(true);
@@ -258,6 +261,10 @@ public class OrderPanel extends javax.swing.JPanel {
             }
             if (orderstatus == 1) {
                 JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
+                foodOrderedList.clear();
+                setOrderList();
+//                getAllProductsForTable(model.getId());
+                setCustomerList(tableId);
             } else {
                 JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
             }
@@ -274,6 +281,7 @@ public class OrderPanel extends javax.swing.JPanel {
             }
             if (orderstatus == 1) {
                 JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
+                setCustomerList(tableId);
             } else {
                 JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
             }
@@ -324,6 +332,10 @@ public class OrderPanel extends javax.swing.JPanel {
             buttonData[index].addProductListener(new CategoryListener() {
                 @Override
                 public void clickedCategory(int index, ItemModel model) {
+                    if (tableSelected.equals("")) {
+                        JOptionPane.showMessageDialog(null, "Please Select Table.", "ERROR", 0);
+                        return;
+                    }
                     System.out.println("OrderPanel: " + index);
                     if (categoryItem != null) {
                         categoryItem.setVisible(false);
@@ -336,6 +348,10 @@ public class OrderPanel extends javax.swing.JPanel {
                     categoryItem.setListener(new CategoryListener() {
                         @Override
                         public void clickedCategory(int index, ItemModel model) {
+                            if (tableSelected.equals("")) {
+                                JOptionPane.showMessageDialog(null, "Please Select Table.", "ERROR", 0);
+                                return;
+                            }
                             System.err.println("OrderPanel: " + model.getName());
                             foodCategoryType.get(index).setImage(model.getImage());
                             foodCategoryType.get(index).setName(model.getName());
@@ -369,15 +385,15 @@ public class OrderPanel extends javax.swing.JPanel {
                                     condition = " food_type_id = '" + foodCategoryType.get(index).getSelected() + "'";
                                     break;
                                 case 3:
-                                     condition = " food_category_id = '" + foodCategoryType.get(index).getSelected() + "'";
+                                    condition = " food_category_id = '" + foodCategoryType.get(index).getSelected() + "'";
                                     break;
                                 case 4:
                                     condition = " food_meat_id = '" + foodCategoryType.get(index).getSelected() + "'";
                                     break;
-                                    default:
-                                        condition ="";
+                                default:
+                                    condition = "";
                             }
-                            querybuild = querybuild + where+condition;
+                            querybuild = querybuild + where + condition;
                             return querybuild;
 
                         }
@@ -399,7 +415,7 @@ public class OrderPanel extends javax.swing.JPanel {
                                 }
                                 if (i == 2 && foodCategoryType.get(i).getSelected() >= 0) {
                                     condition = condition.equals("") ? condition + " food_type_id = '" + foodCategoryType.get(i).getSelected() + "'"
-                                            : condition + " OR food_type_id = '" + foodCategoryType.get(i).getSelected()+ "'";
+                                            : condition + " OR food_type_id = '" + foodCategoryType.get(i).getSelected() + "'";
 //                                    condition = " food_type_id = '" + foodCategoryType.get(i).getSelected() + "'";
                                     continue;
                                 }
@@ -411,7 +427,7 @@ public class OrderPanel extends javax.swing.JPanel {
                                 }
                                 if (i == 4 && foodCategoryType.get(i).getSelected() >= 0) {
                                     condition = condition.equals("") ? condition + " food_meat_id = '" + foodCategoryType.get(i).getSelected() + "'"
-                                            : condition + " OR food_meat_id = '" + foodCategoryType.get(i).getSelected()+ "'";
+                                            : condition + " OR food_meat_id = '" + foodCategoryType.get(i).getSelected() + "'";
 //                                    condition = " food_meat_id = '" + foodCategoryType.get(i).getSelected() + "'";
                                     continue;
                                 }
@@ -438,6 +454,7 @@ public class OrderPanel extends javax.swing.JPanel {
 
     private void setCustomerList(int tableId) {
         customerList.clear();
+        menuIdArray.clear();
         customerList = new OrderService().getAcitveCustomerByTableId(tableId);
         JPanel content = new JPanel();
         content.setBackground(Color.WHITE);
@@ -475,7 +492,20 @@ public class OrderPanel extends javax.swing.JPanel {
                 @Override
                 public void clickedProducts(int index, OrderItemModel model) {
                     System.err.println("OrderPanel FoodProduct:" + model.getName());
-                    foodOrderedList.add(model);
+                    if (tableSelected.equals("")) {
+                        JOptionPane.showMessageDialog(null, "Please Select Table.", "ERROR", 0);
+                        return;
+                    }
+                    
+                    if(!menuIdArray.contains(model.getMenu_id())){
+                       if(model.getQuantity() == null){
+                            model.setQuantity("0");
+                        }
+                        model.setQuantity(String.valueOf(Integer.parseInt(model.getQuantity()) + 1));
+                        foodOrderedList.add(model);
+                       
+                    }
+                    
                     setOrderList();
                 }
             });
@@ -485,11 +515,14 @@ public class OrderPanel extends javax.swing.JPanel {
     }
 
     private void setOrderList() {
+        menuIdArray.clear();
         JPanel contentOrder = new JPanel();
         contentOrder.setLayout(new BoxLayout(contentOrder, BoxLayout.Y_AXIS));
         OrderItem orderData[] = new OrderItem[foodOrderedList.size()];
         for (int index = 0; index < foodOrderedList.size(); index++) {
             orderData[index] = new OrderItem(foodOrderedList.get(index));
+            if(!menuIdArray.contains(ui))
+                menuIdArray.add(foodOrderedList.get(index).getMenu_id());
             contentOrder.add(orderData[index]);
         }
         sp_detail_list.getViewport().setView(contentOrder);
@@ -498,15 +531,16 @@ public class OrderPanel extends javax.swing.JPanel {
     private void getAllProducts(String querybuild) {
         foodProductList.clear();
         MenuService menuService = new MenuService();
-        foodCategoryList = menuService.getMenuOnTable(querybuild);
-        for (int i = 0; i < foodCategoryList.size(); i++) {
-            OrderItemModel model = new OrderItemModel();
-            model.setId(foodCategoryList.get(i).getId());
-            model.setMenu_id(foodCategoryList.get(i).getId());
-            model.setImage(foodCategoryList.get(i).getImage());
-            model.setName(foodCategoryList.get(i).getName());
-            foodProductList.add(model);
-        }
+        foodProductList = menuService.getMenuOnTable(querybuild);
+//        for (int i = 0; i < foodCategoryList.size(); i++) {
+//            OrderItemModel model = new OrderItemModel();
+//            model.setId(foodCategoryList.get(i).getId());
+//            model.setMenu_id(foodCategoryList.get(i).getId());
+//            model.setImage(foodCategoryList.get(i).getImage());
+//            model.setName(foodCategoryList.get(i).getName());
+//            model.setPrice(querybuild);
+//            foodProductList.add(model);
+//        }
         setProductList();
     }
 
@@ -519,7 +553,7 @@ public class OrderPanel extends javax.swing.JPanel {
     }
 
     private void setCAtegoryType() {
-         foodCategoryType = new ArrayList<>();
+        foodCategoryType = new ArrayList<>();
         foodCategoryType.add(new ItemModel(0, "Veg Type"));
         foodCategoryType.add(new ItemModel(1, "Timing"));
         foodCategoryType.add(new ItemModel(2, "Type"));

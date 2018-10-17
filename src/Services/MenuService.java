@@ -6,6 +6,7 @@
 package Services;
 
 import DBConnection.SQLRun;
+import Utility.OrderItem;
 import model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ import model.FoodVegType;
 import model.MenuListModel;
 import model.MenuModel;
 import model.ItemModel;
+import model.OrderItemModel;
 
 /**
  *
@@ -240,17 +242,19 @@ public class MenuService {
         return menuList;
     }
     
-    public ArrayList<ItemModel> getMenuOnTable(String query) {
-        ArrayList<ItemModel> menuList = new ArrayList<>();
+    public ArrayList<OrderItemModel> getMenuOnTable(String query) {
+        ArrayList<OrderItemModel> menuList = new ArrayList<>();
 
         SQLRun sqlObj = new SQLRun();
         ResultSet rs = sqlObj.sqlQuery(query);
         try {
             while (rs.next()) {
-                ItemModel model = new ItemModel();
+                OrderItemModel model = new OrderItemModel();
                 model.setName(rs.getString("item_name"));
                 model.setId(rs.getInt("menu_id"));
+                model.setMenu_id(rs.getInt("menu_id"));
                 model.setImage(rs.getString("image_path"));
+                model.setPrice(rs.getString("price"));
                 menuList.add(model);
             }
         } catch (Exception e) {
