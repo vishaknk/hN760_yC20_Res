@@ -71,8 +71,13 @@ public class OrderService {
     }
     
     public int printBill(String id) {
+        int status = 0;
         SQLRun sqlObj = new SQLRun();
         String sql = "update tbl_order_sub set status = '2' where order_id = '" + id +"'";
+        
+        status = sqlObj.sqlUpdate(sql);
+        sql = "update tbl_order set status = '2' where order_id = '" + id +"'";
+        status = sqlObj.sqlUpdate(sql);
         return sqlObj.sqlUpdate(sql);
     }
 
