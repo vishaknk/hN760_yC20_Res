@@ -83,7 +83,7 @@ public class OrderService {
 
     public ArrayList<OrderItemModel> getAcitveOrderByTableId(int id) {
         ArrayList<OrderItemModel> orderList = new ArrayList<>();
-        String sql = "select m.menu_id,o.table_id,  o.status, m.item_name as name ,o.customer_name,o.order_id as oid, so.order_id as order_id,so.menu_id from tbl_order o \n" +
+        String sql = "select m.menu_id,o.table_id,  o.status, m.item_name as name, m.image_path as image ,o.customer_name,o.order_id as oid, so.order_id as order_id,so.menu_id from tbl_order o \n" +
 "left join tbl_order_sub so on o.order_id = so.order_id\n" +
 "left join tbl_menu m on m.menu_id = so.menu_id where o.table_id = '" + id + "' AND o.status ='1'";
         SQLRun sqlObj = new SQLRun();
@@ -96,6 +96,7 @@ public class OrderService {
                 orderItem.setMenu_id(rs.getInt("menu_id"));
                 orderItem.setTable_id(rs.getInt("table_id"));
                 orderItem.setName(rs.getString("customer_name"));
+                orderItem.setImage(rs.getString("image"));
 
                 orderList.add(orderItem);
             }
@@ -161,7 +162,7 @@ public class OrderService {
     
     public ArrayList<OrderItemModel> getAcitveOrderByOrderId(String orderId,int TableID) {
         ArrayList<OrderItemModel> orderList = new ArrayList<>();
-        String sql = "select m.menu_id,o.table_id, m.item_name as name ,o.customer_name,o.order_id as oid,"
+        String sql = "select m.menu_id,o.table_id, m.item_name as name,m.image_path as image ,o.customer_name,o.order_id as oid,"
                 + " so.order_id as order_id, so.menu_id from tbl_order o left join tbl_order_sub so "
                 + "on o.order_id = so.order_id left join tbl_menu m on m.menu_id = so.menu_id "
                 + "where o.table_id = '"+TableID+"' AND so.order_id ='"+orderId+"'";
@@ -175,6 +176,7 @@ public class OrderService {
                 orderItem.setMenu_id(rs.getInt("menu_id"));
                 orderItem.setTable_id(rs.getInt("table_id"));
                 orderItem.setName(rs.getString("name"));
+                orderItem.setImage(rs.getString("image"));
 
                 orderList.add(orderItem);
             }

@@ -13,6 +13,7 @@ import Utility.JFilePicker;
 import Utility.Utility;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -442,7 +443,7 @@ public class MenuPanel extends javax.swing.JPanel {
             return;
         }
 
-        if (!Utility.validatePhone(price.getText().trim())) {
+        if (!Utility.validatePhone(price.getText().trim()) || !price.getText().equals("0")) {
             JOptionPane.showMessageDialog(null, "Please enter valid amount", "ERROR", 0);
             return;
         }
@@ -457,9 +458,15 @@ public class MenuPanel extends javax.swing.JPanel {
         model.setPrice(Integer.parseInt(price.getText().trim()));
         if (filePicker.getSelectedFilePath() != null && !filePicker.getSelectedFilePath().equals("")) {
             try {
-                String outPath = "/Users/priyesh/Documents/Test/" + filePicker.getSelectedFilePath().substring(filePicker.getSelectedFilePath().lastIndexOf("/") + 1);
-                ImageResizer.resize(filePicker.getSelectedFilePath(), outPath, 0.2);
-                model.setImagePath(outPath);
+                String home = System.getProperty("user.home");
+                File dir = new File(home + "/Downloads/KOT");
+
+                // attempt to create the directory here
+                boolean successful = dir.mkdir();
+                String outPath = dir.getAbsolutePath() + "/" + filePicker.getSelectedFilePath().substring(filePicker.getSelectedFilePath().lastIndexOf("/") + 1);
+                    ImageResizer.resize(filePicker.getSelectedFilePath(), outPath, 0.2);
+                    model.setImagePath(outPath);
+
             } catch (IOException ex) {
                 Logger.getLogger(MenuPanel.class.getName()).log(Level.SEVERE, null, ex);
             }

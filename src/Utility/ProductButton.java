@@ -69,19 +69,19 @@ public class ProductButton extends JButton implements ActionListener{
     public void setDesign() {
         if(type == CategoryListener.CATEGORY) {
             this.setText(itemModel.getName());
-            ImageIcon img = new ImageIcon(itemModel.getImage() + "/Users/Visak/Downloads/IMG_7523.JPG");
+            ImageIcon img = new ImageIcon(itemModel.getImage());
             Image image = img.getImage();
             Image newimg = image.getScaledInstance( 60, 60,  java.awt.Image.SCALE_SMOOTH ) ;  
    
             this.setIcon(new ImageIcon(newimg));
         }else if(type == CustomerListner.CUSTOMER){ 
             this.setText(orderItemModel.getCustomer_name());
-            ImageIcon img = new ImageIcon(orderItemModel.getImage() + "/Users/Visak/Downloads/IMG_7523.JPG");
+            ImageIcon img = new ImageIcon(orderItemModel.getImage());
             Image image = img.getImage();
             Image newimg = image.getScaledInstance( 60, 60,  java.awt.Image.SCALE_SMOOTH ) ;  
         }else {
             this.setText(orderItemModel.getName());
-            ImageIcon img = new ImageIcon(orderItemModel.getImage() + "/Users/Visak/Downloads/IMG_7523.JPG");
+            ImageIcon img = new ImageIcon(orderItemModel.getImage());
             Image image = img.getImage();
             Image newimg = image.getScaledInstance( 60, 60,  java.awt.Image.SCALE_SMOOTH ) ;  
    
