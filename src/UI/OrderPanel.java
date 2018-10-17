@@ -250,39 +250,38 @@ public class OrderPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Please take at least one order.", "ERROR", 0);
             return;
         }
-        System.err.println("customerOrderId: " + customerOrderId);
+        
         OrderService service = new OrderService();
-         int orderstatus = 0;
+        int orderstatus = 0;
         if (customerOrderId.equals("")) {
             for (int i = 0; i < foodOrderedList.size(); i++) {
                 foodOrderedList.get(i).setTable_id(tableId);
                 foodOrderedList.get(i).setNo_of_seating(noOfSeats);
                 foodOrderedList.get(i).setCustomer_name("cust" + i);
                 orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), true);
-              
+
             }
-             if (orderstatus == 1) {
-                    JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
-                }
+            if (orderstatus == 1) {
+                JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
+            } else {
+                JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
+            }
 
         } else {
-            service.deleteFoodItem(customerOrderId);
+            service.deleteOrder(customerOrderId);
             for (int i = 0; i < foodOrderedList.size(); i++) {
                 foodOrderedList.get(i).setTable_id(tableId);
                 foodOrderedList.get(i).setNo_of_seating(noOfSeats);
                 foodOrderedList.get(i).setCustomer_name("cust");
                 foodOrderedList.get(i).setOrder_id(customerOrderId);
                 orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), false);
-                
 
             }
             if (orderstatus == 1) {
-                    JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
-                }
+                JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
+            } else {
+                JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
+            }
         }
 
 
@@ -290,6 +289,18 @@ public class OrderPanel extends javax.swing.JPanel {
 
     private void printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printActionPerformed
         // TODO add your handling code here:
+        if (customerOrderId.equals("")) {
+            JOptionPane.showMessageDialog(null, "Please select customer.", "ERROR", 0);
+            return;
+        }
+        int status = 0;
+        OrderService service = new OrderService();
+        status = service.printBill(customerOrderId);
+        if (status == 1) {
+            JOptionPane.showMessageDialog(null, " Print Success ", "Success", 1);
+        } else {
+            JOptionPane.showMessageDialog(null, "Print not initiated", "ERROR", 0);
+        }
     }//GEN-LAST:event_printActionPerformed
 
 

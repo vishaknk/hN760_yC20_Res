@@ -64,9 +64,15 @@ public class OrderService {
     }
     
 
-    public int deleteFoodItem(String id) {
+    public int deleteOrder(String id) {
         SQLRun sqlObj = new SQLRun();
         String sql = "delete from tbl_order_sub where order_id = '" + id + "'";
+        return sqlObj.sqlUpdate(sql);
+    }
+    
+    public int printBill(String id) {
+        SQLRun sqlObj = new SQLRun();
+        String sql = "update tbl_order_sub set status = '2' where order_id = '" + id +"'";
         return sqlObj.sqlUpdate(sql);
     }
 
