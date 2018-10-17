@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import model.ItemModel;
 import model.OrderItemModel;
 import Interface.CategoryListener;
-import Interface.ProductListener;
 import Services.FoodCategoryService;
 import Services.FoodMeatService;
 import Services.FoodTypeService;

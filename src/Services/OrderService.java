@@ -64,9 +64,9 @@ public class OrderService {
     }
     
 
-    public int deleteFoodItem(int id) {
+    public int deleteFoodItem(String id) {
         SQLRun sqlObj = new SQLRun();
-        String sql = "delete from tbl_food_category where food_category_id = '" + id + "'";
+        String sql = "delete from tbl_order_sub where order_id = '" + id + "'";
         return sqlObj.sqlUpdate(sql);
     }
 
@@ -94,14 +94,36 @@ public class OrderService {
         return orderList;
     }
 
+    public ArrayList<OrderItemModel> getAcitveCustomerByTableId(int id) {
+        ArrayList<OrderItemModel> orderList = new ArrayList<>();
+        String sql = "select distinct o.table_id,  o.status,o.customer_name, o.order_id as oid, so.order_id as order_id from tbl_order o left join tbl_order_sub so on o.order_id = so.order_id "
+                + " where o.table_id = '" + id + "' AND o.status ='1'";
+        SQLRun sqlObj = new SQLRun();
+
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                OrderItemModel orderItem = new OrderItemModel();
+                orderItem.setOrder_id(rs.getString("order_id"));
+                orderItem.setTable_id(rs.getInt("table_id"));
+                orderItem.setName(rs.getString("customer_name"));
+                orderItem.setCustomer_name(rs.getString("customer_name"));
+
+                orderList.add(orderItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orderList;
+    }
     public int saveOrderInMainOrderTable(OrderItemModel orderItemModel, boolean isAdd) { //To change body of generated methods, choose Tools | Templates.
-        int status = 0;
+        int status = 0, finalStatus = 0;
         SQLRun sqlObj = new SQLRun();
         String sql = "";
         String orderId = UUID.randomUUID().toString();
         if (isAdd) {
             sql = "Insert into tbl_order (order_id,customer_name, table_id,no_of_seating ) "
-                    + "values('" + orderId +"','"+ orderId+ "', '" + orderItemModel.getTable_id()
+                    + "values('" + orderId +"','"+ orderItemModel.getCustomer_name()+ "', '" + orderItemModel.getTable_id()
                     + "', '" + orderItemModel.getNo_of_seating()+ "')";
             status = sqlObj.sqlUpdate(sql);
             //save order details to suborder table
@@ -110,18 +132,44 @@ public class OrderService {
                  sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price) "
                     + "values('" +orderId +"','"+ orderItemModel.getMenu_id()
                          + "', '" + orderItemModel.getQuantity()+ "', '" + orderItemModel.getPrice()+ "')";
-            status = sqlObj.sqlUpdate(sql);
+            finalStatus = sqlObj.sqlUpdate(sql);
                 
             }
 
         } else {
-//            sql = "update tbl_food_type set food_type_name = '" + foodTypeModel.getFood_type_name()
-//                    + "' where food_type_id = '" + foodTypeModel.getFood_type_id() + "'";
+            sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price) "
+                    + "values('" +orderItemModel.getOrder_id() +"','"+ orderItemModel.getMenu_id()
+                         + "', '" + orderItemModel.getQuantity()+ "', '" + orderItemModel.getPrice()+ "')";
 
-//            status = sqlObj.sqlUpdate(sql);
+            finalStatus = sqlObj.sqlUpdate(sql);
 
         }
 
-        return status;
+        return finalStatus;
+    }
+    
+    public ArrayList<OrderItemModel> getAcitveOrderByOrderId(String orderId,int TableID) {
+        ArrayList<OrderItemModel> orderList = new ArrayList<>();
+        String sql = "select m.menu_id,o.table_id, m.item_name as name ,o.customer_name,o.order_id as oid,"
+                + " so.order_id as order_id, so.menu_id from tbl_order o left join tbl_order_sub so "
+                + "on o.order_id = so.order_id left join tbl_menu m on m.menu_id = so.menu_id "
+                + "where o.table_id = '"+TableID+"' AND so.order_id ='"+orderId+"'";
+        SQLRun sqlObj = new SQLRun();
+
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                OrderItemModel orderItem = new OrderItemModel();
+                orderItem.setOrder_id(rs.getString("order_id"));
+                orderItem.setMenu_id(rs.getInt("menu_id"));
+                orderItem.setTable_id(rs.getInt("table_id"));
+                orderItem.setName(rs.getString("name"));
+
+                orderList.add(orderItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orderList;
     }
 }

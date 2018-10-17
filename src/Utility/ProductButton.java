@@ -20,6 +20,7 @@ import javax.swing.border.LineBorder;
 import model.ItemModel;
 import model.OrderItemModel;
 import Interface.CategoryListener;
+import Interface.CustomerListner;
 
 /**
  *
@@ -28,6 +29,7 @@ import Interface.CategoryListener;
 public class ProductButton extends JButton implements ActionListener{
 
     private CategoryListener productListener;
+    private CustomerListner customerListner;
     private ItemModel itemModel;
     private OrderItemModel orderItemModel;
     private int index, type = 0;
@@ -48,6 +50,14 @@ public class ProductButton extends JButton implements ActionListener{
         setDesign();
     }
     
+    public ProductButton(OrderItemModel model, int index, int type) {
+        this.orderItemModel = model;
+        this.index = index;
+        this.type = type;
+        setDesign();
+    }
+    
+    
     public ProductButton(Icon icon, String text){
         this.setText(text);
         this.setIcon(new javax.swing.ImageIcon(getClass().getResource("Images/home.png")));
@@ -64,7 +74,12 @@ public class ProductButton extends JButton implements ActionListener{
             Image newimg = image.getScaledInstance( 60, 60,  java.awt.Image.SCALE_SMOOTH ) ;  
    
             this.setIcon(new ImageIcon(newimg));
-        } else {
+        }else if(type == CustomerListner.CUSTOMER){ 
+            this.setText(orderItemModel.getCustomer_name());
+            ImageIcon img = new ImageIcon(orderItemModel.getImage() + "/Users/Visak/Downloads/IMG_7523.JPG");
+            Image image = img.getImage();
+            Image newimg = image.getScaledInstance( 60, 60,  java.awt.Image.SCALE_SMOOTH ) ;  
+        }else {
             this.setText(orderItemModel.getName());
             ImageIcon img = new ImageIcon(orderItemModel.getImage() + "/Users/Visak/Downloads/IMG_7523.JPG");
             Image image = img.getImage();
@@ -91,6 +106,8 @@ public class ProductButton extends JButton implements ActionListener{
         if(type == CategoryListener.CATEGORY) {
             System.out.println("ProductButton: " + e.getActionCommand());
             productListener.clickedCategory(index, itemModel);
+        }else if(type == CustomerListner.CUSTOMER){
+            customerListner.onClick(orderItemModel);
         } else {
             System.out.println("ProductButton: " + e.getActionCommand());
             productListener.clickedProducts(index, orderItemModel);
@@ -99,6 +116,10 @@ public class ProductButton extends JButton implements ActionListener{
 
     public void addProductListener(CategoryListener listener) {
         this.productListener = listener;
+    }
+    
+    public void addCustomerListner(CustomerListner listener) {
+        this.customerListner = listener;
     }
     
     private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {

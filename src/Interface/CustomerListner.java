@@ -5,10 +5,14 @@
  */
 package Interface;
 
+import model.OrderItemModel;
+
 /**
  *
  * @author Visak
  */
-public interface ProductListener {
-    public void test();
+
+public interface CustomerListner {
+     public static final int CUSTOMER = 3333;
+    public void onClick(OrderItemModel orderItem);
 }

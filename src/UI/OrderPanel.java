@@ -24,6 +24,7 @@ import javax.swing.ScrollPaneConstants;
 import model.ItemModel;
 import model.OrderItemModel;
 import Interface.CategoryListener;
+import Interface.CustomerListner;
 import Services.MenuService;
 import Services.OrderService;
 import java.awt.FlowLayout;
@@ -38,12 +39,14 @@ public class OrderPanel extends javax.swing.JPanel {
 
     private ArrayList<ItemModel> foodCategoryType;
     private ArrayList<ItemModel> foodCategoryList;
+    private ArrayList<OrderItemModel> customerList;
     //Product list contains the price, quantity and procduct name
     private ArrayList<OrderItemModel> foodProductList;
     private ArrayList<OrderItemModel> foodOrderedList;
     private CategoryItem categoryItem;
-    private String tableSelected ="";
+    private String tableSelected = "";
     private int tableId, noOfSeats = 0;
+    private String customerOrderId = "";
 
     /**
      * Creates new form OrderPanel
@@ -55,6 +58,7 @@ public class OrderPanel extends javax.swing.JPanel {
         foodCategoryList = new ArrayList<>();
         foodProductList = new ArrayList<>();
         foodOrderedList = new ArrayList<>();
+        customerList = new ArrayList<>();
         foodCategoryType.add(new ItemModel(0, "Veg Type"));
         foodCategoryType.add(new ItemModel(1, "Timing"));
         foodCategoryType.add(new ItemModel(2, "Type"));
@@ -81,8 +85,9 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         tableButton = new javax.swing.JButton();
-        save = new javax.swing.JButton();
         print = new javax.swing.JButton();
+        sp_customer = new javax.swing.JScrollPane();
+        save = new javax.swing.JButton();
         sp_category = new javax.swing.JScrollPane();
         sp_product_list = new javax.swing.JScrollPane();
 
@@ -106,7 +111,7 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
+            .addGap(0, 551, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,17 +135,20 @@ public class OrderPanel extends javax.swing.JPanel {
             }
         });
 
-        save.setText("Save");
-        save.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveActionPerformed(evt);
-            }
-        });
-
         print.setText("Print");
         print.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printActionPerformed(evt);
+            }
+        });
+
+        sp_customer.setBackground(new java.awt.Color(255, 102, 102));
+        sp_customer.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        save.setText("Save");
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
             }
         });
 
@@ -149,22 +157,26 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(tableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(save)
-                    .addComponent(print))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(save)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(print)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sp_customer))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(save)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(print)
-                .addContainerGap())
+                .addComponent(sp_customer))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(tableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(save)
+                    .addComponent(print)))
         );
 
         sp_category.setBackground(new java.awt.Color(255, 102, 102));
@@ -180,17 +192,20 @@ public class OrderPanel extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sp_product_list)
-            .addComponent(sp_category, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+            .addComponent(sp_category, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(sp_category, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(sp_product_list, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sp_category, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sp_product_list, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -207,7 +222,10 @@ public class OrderPanel extends javax.swing.JPanel {
         categoryItem.setListener(new CategoryListener() {
             @Override
             public void clickedCategory(int index, ItemModel model) {
-                getAllProductsForTable(model.getId());
+                foodOrderedList.clear();
+                setOrderList();
+//                getAllProductsForTable(model.getId());
+                setCustomerList(model.getId());
                 tableButton.setText(model.getName());
                 tableSelected = model.getName();
                 tableId = model.getId();
@@ -224,25 +242,50 @@ public class OrderPanel extends javax.swing.JPanel {
 
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
         // TODO add your handling code here:
-        if(tableSelected.equals("")){
+        if (tableSelected.equals("")) {
             JOptionPane.showMessageDialog(null, "Please Select Table.", "ERROR", 0);
             return;
         }
-        if(foodOrderedList.size() <= 0){
+        if (foodOrderedList.size() <= 0) {
             JOptionPane.showMessageDialog(null, "Please take at least one order.", "ERROR", 0);
             return;
         }
+        System.err.println("customerOrderId: " + customerOrderId);
         OrderService service = new OrderService();
-        for(int i = 0 ; i< foodOrderedList.size();i++){
-            foodOrderedList.get(i).setTable_id(tableId);
-            foodOrderedList.get(i).setNo_of_seating(noOfSeats);
-            int orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), true);
-           
+         int orderstatus = 0;
+        if (customerOrderId.equals("")) {
+            for (int i = 0; i < foodOrderedList.size(); i++) {
+                foodOrderedList.get(i).setTable_id(tableId);
+                foodOrderedList.get(i).setNo_of_seating(noOfSeats);
+                foodOrderedList.get(i).setCustomer_name("cust" + i);
+                orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), true);
+              
+            }
+             if (orderstatus == 1) {
+                    JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
+                }
+
+        } else {
+            service.deleteFoodItem(customerOrderId);
+            for (int i = 0; i < foodOrderedList.size(); i++) {
+                foodOrderedList.get(i).setTable_id(tableId);
+                foodOrderedList.get(i).setNo_of_seating(noOfSeats);
+                foodOrderedList.get(i).setCustomer_name("cust");
+                foodOrderedList.get(i).setOrder_id(customerOrderId);
+                orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), false);
+                
+
+            }
+            if (orderstatus == 1) {
+                    JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
+                }
         }
-        
-        
-        
-        
+
+
     }//GEN-LAST:event_saveActionPerformed
 
     private void printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printActionPerformed
@@ -258,6 +301,7 @@ public class OrderPanel extends javax.swing.JPanel {
     private javax.swing.JButton print;
     private javax.swing.JButton save;
     private javax.swing.JScrollPane sp_category;
+    private javax.swing.JScrollPane sp_customer;
     private javax.swing.JScrollPane sp_detail_list;
     private javax.swing.JScrollPane sp_product_list;
     private javax.swing.JButton tableButton;
@@ -311,22 +355,22 @@ public class OrderPanel extends javax.swing.JPanel {
                                     condition = " food_veg_id = '" + foodCategoryType.get(i).getSelected() + "'";
                                     continue;
                                 }
-                                if (i == 1 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                if (i == 1 && foodCategoryType.get(i).getSelected() >= 0) {
                                     condition = condition.equals("") ? condition + " food_time_id = '" + foodCategoryType.get(i).getSelected() + "'" : condition
                                             + " AND food_time_id = '" + foodCategoryType.get(i).getSelected() + "'";
                                     continue;
                                 }
-                                if (i == 2 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                if (i == 2 && foodCategoryType.get(i).getSelected() >= 0) {
                                     condition = condition.equals("") ? condition + " food_type_id = '" + foodCategoryType.get(i).getSelected() + "'"
                                             : condition + " AND food_type_id = '" + foodCategoryType.get(i).getSelected();
                                     continue;
                                 }
-                                if (i == 3 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                if (i == 3 && foodCategoryType.get(i).getSelected() >= 0) {
                                     condition = condition.equals("") ? condition + " food_category_id = '" + foodCategoryType.get(i).getSelected() + "'"
                                             : condition + " AND food_category_id = '" + foodCategoryType.get(i).getSelected();
                                     continue;
                                 }
-                                if (i == 4 &&foodCategoryType.get(i).getSelected() >= 0) {
+                                if (i == 4 && foodCategoryType.get(i).getSelected() >= 0) {
                                     condition = condition.equals("") ? condition + " food_meat_id = '" + foodCategoryType.get(i).getSelected() + "'"
                                             : " AND food_meat_id = '" + foodCategoryType.get(i).getSelected();
                                     continue;
@@ -350,6 +394,28 @@ public class OrderPanel extends javax.swing.JPanel {
             content.add(buttonData[index]);
         }
         sp_category.getViewport().setView(content);
+    }
+
+    private void setCustomerList(int tableId) {
+        customerList.clear();
+        customerList = new OrderService().getAcitveCustomerByTableId(tableId);
+        JPanel content = new JPanel();
+        content.setBackground(Color.WHITE);
+
+        ProductButton buttonData[] = new ProductButton[customerList.size()];
+
+        for (int index = 0; index < customerList.size(); index++) {
+            buttonData[index] = new ProductButton(customerList.get(index), index, CustomerListner.CUSTOMER);
+            buttonData[index].addCustomerListner(new CustomerListner() {
+                @Override
+                public void onClick(OrderItemModel orderItem) { //To change body of generated methods, choose Tools | Templates.
+                    customerOrderId = orderItem.getOrder_id();
+                    getAllProductsForTable(orderItem.getOrder_id(), orderItem.getTable_id());
+                }
+            });
+            content.add(buttonData[index]);
+        }
+        sp_customer.getViewport().setView(content);
     }
 
     private void setProductList() {
@@ -396,6 +462,7 @@ public class OrderPanel extends javax.swing.JPanel {
         for (int i = 0; i < foodCategoryList.size(); i++) {
             OrderItemModel model = new OrderItemModel();
             model.setId(foodCategoryList.get(i).getId());
+            model.setMenu_id(foodCategoryList.get(i).getId());
             model.setImage(foodCategoryList.get(i).getImage());
             model.setName(foodCategoryList.get(i).getName());
             foodProductList.add(model);
@@ -403,10 +470,10 @@ public class OrderPanel extends javax.swing.JPanel {
         setProductList();
     }
 
-    private void getAllProductsForTable(int tableID) {
+    private void getAllProductsForTable(String orderID, int tableID) {
         foodOrderedList.clear();
         OrderService orderService = new OrderService();
-        foodOrderedList = orderService.getAcitveOrderByTableId(tableID);
+        foodOrderedList = orderService.getAcitveOrderByOrderId(orderID, tableID);
         setOrderList();
 
     }
