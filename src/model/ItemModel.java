@@ -19,6 +19,7 @@ public class ItemModel {
         this.name = name;
     }
     
+    
     private int id, selected = -1;
 
     public int getSelected() {
