@@ -283,13 +283,7 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_lb_staffMouseClicked
 
     private void lb_kitchenMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_kitchenMouseClicked
-        // TODO add your handling code here:
-        if(visiblePanel != null)
-            removeMainLayout(visiblePanel, p_main);
-        
-        FoodMeatType panel = new FoodMeatType();
-        visiblePanel = panel;
-        setMainLayout(panel,p_main);
+        new KitchenFrame().setVisible(true);
     }//GEN-LAST:event_lb_kitchenMouseClicked
 
     private void lb_payrollMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lb_payrollMouseClicked

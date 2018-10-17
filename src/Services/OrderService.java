@@ -63,6 +63,29 @@ public class OrderService {
         }
         return orderList;
     }
+    
+    public List<OrderItemModel> getKitchenData() {
+        List<OrderItemModel> orderList = new ArrayList<>();
+        String sql = "select o.order_sub_id, o.order_id, o.menu_id, m.item_name, o.quantity from tbl_order_sub o left join tbl_menu m on o.menu_id = m.menu_id where o.status = 1";
+        SQLRun sqlObj = new SQLRun();
+
+        ResultSet rs = sqlObj.sqlQuery(sql);
+        try {
+            while (rs.next()) {
+                OrderItemModel orderItem = new OrderItemModel();
+                orderItem.setOrder_id(rs.getString("order_id"));
+                orderItem.setId(rs.getInt("order_sub_id"));
+                orderItem.setMenu_id(rs.getInt("menu_id"));
+                orderItem.setName(rs.getString("item_name"));
+                orderItem.setQuantity(rs.getString("quantity"));
+
+                orderList.add(orderItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orderList;
+    }
 
     public int deleteOrder(String id) {
         SQLRun sqlObj = new SQLRun();
@@ -78,6 +101,13 @@ public class OrderService {
         status = sqlObj.sqlUpdate(sql);
         sql = "update tbl_order set status = '2' where order_id = '" + id + "'";
         status = sqlObj.sqlUpdate(sql);
+        return sqlObj.sqlUpdate(sql);
+    }
+    
+     public int prepared(int id) {
+        SQLRun sqlObj = new SQLRun();
+        String sql = "update tbl_order_sub set status = '4' where order_sub_id = '" + id + "'";
+       
         return sqlObj.sqlUpdate(sql);
     }
 
