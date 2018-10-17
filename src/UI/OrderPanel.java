@@ -38,12 +38,11 @@ import javax.swing.JOptionPane;
 public class OrderPanel extends javax.swing.JPanel {
 
     private ArrayList<ItemModel> foodCategoryType;
-    private ArrayList<ItemModel> foodCategoryList;
     private ArrayList<OrderItemModel> customerList;
     //Product list contains the price, quantity and procduct name
     private ArrayList<OrderItemModel> foodProductList;
     private ArrayList<OrderItemModel> foodOrderedList;
-    private ArrayList<Integer>menuIdArray;
+    private ArrayList<Integer> menuIdArray;
     private CategoryItem categoryItem;
     private String tableSelected = "";
     private int tableId, noOfSeats = 0;
@@ -56,7 +55,6 @@ public class OrderPanel extends javax.swing.JPanel {
         initComponents();
         //Model class to store the item data
 
-        foodCategoryList = new ArrayList<>();
         foodProductList = new ArrayList<>();
         foodOrderedList = new ArrayList<>();
         customerList = new ArrayList<>();
@@ -252,18 +250,18 @@ public class OrderPanel extends javax.swing.JPanel {
         OrderService service = new OrderService();
         int orderstatus = 0;
         if (customerOrderId.equals("")) {
-            for (int i = 0; i < foodOrderedList.size(); i++) {
-                foodOrderedList.get(i).setTable_id(tableId);
-                foodOrderedList.get(i).setNo_of_seating(noOfSeats);
-                foodOrderedList.get(i).setCustomer_name("cust" + i);
-                orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), true);
-
-            }
+            orderstatus = service.saveOrderInMainOrderTable(foodOrderedList, tableId, noOfSeats);
             if (orderstatus == 1) {
                 JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
-                foodOrderedList.clear();
+
+                foodProductList = new ArrayList<>();
+                foodOrderedList = new ArrayList<>();
+                customerList = new ArrayList<>();
+                menuIdArray = new ArrayList<>();
+                setCAtegoryType();
+                setCategoryList();
+                setProductList();
                 setOrderList();
-//                getAllProductsForTable(model.getId());
                 setCustomerList(tableId);
             } else {
                 JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
@@ -271,16 +269,18 @@ public class OrderPanel extends javax.swing.JPanel {
 
         } else {
             service.deleteOrder(customerOrderId);
-            for (int i = 0; i < foodOrderedList.size(); i++) {
-                foodOrderedList.get(i).setTable_id(tableId);
-                foodOrderedList.get(i).setNo_of_seating(noOfSeats);
-                foodOrderedList.get(i).setCustomer_name("cust");
-                foodOrderedList.get(i).setOrder_id(customerOrderId);
-                orderstatus = service.saveOrderInMainOrderTable(foodOrderedList.get(i), false);
-
-            }
+            orderstatus = service.updateOrderInMainOrderTable(foodOrderedList, tableId,noOfSeats,customerOrderId);
             if (orderstatus == 1) {
                 JOptionPane.showMessageDialog(null, " Order Success ", "Success", 1);
+
+                foodProductList = new ArrayList<>();
+                foodOrderedList = new ArrayList<>();
+                customerList = new ArrayList<>();
+                menuIdArray = new ArrayList<>();
+                setCAtegoryType();
+                setCategoryList();
+                setProductList();
+                setOrderList();
                 setCustomerList(tableId);
             } else {
                 JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
@@ -301,6 +301,15 @@ public class OrderPanel extends javax.swing.JPanel {
         status = service.printBill(customerOrderId);
         if (status == 1) {
             JOptionPane.showMessageDialog(null, " Print Success ", "Success", 1);
+            foodProductList = new ArrayList<>();
+            foodOrderedList = new ArrayList<>();
+            customerList = new ArrayList<>();
+            menuIdArray = new ArrayList<>();
+            setCAtegoryType();
+            setCategoryList();
+            setProductList();
+            setOrderList();
+            setCustomerList(tableId);
         } else {
             JOptionPane.showMessageDialog(null, "Print not initiated", "ERROR", 0);
         }
@@ -496,16 +505,16 @@ public class OrderPanel extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(null, "Please Select Table.", "ERROR", 0);
                         return;
                     }
-                    
-                    if(!menuIdArray.contains(model.getMenu_id())){
-                       if(model.getQuantity() == null){
+
+                    if (!menuIdArray.contains(model.getMenu_id())) {
+                        if (model.getQuantity() == null) {
                             model.setQuantity("0");
                         }
                         model.setQuantity(String.valueOf(Integer.parseInt(model.getQuantity()) + 1));
                         foodOrderedList.add(model);
-                       
+
                     }
-                    
+
                     setOrderList();
                 }
             });
@@ -521,8 +530,9 @@ public class OrderPanel extends javax.swing.JPanel {
         OrderItem orderData[] = new OrderItem[foodOrderedList.size()];
         for (int index = 0; index < foodOrderedList.size(); index++) {
             orderData[index] = new OrderItem(foodOrderedList.get(index));
-            if(!menuIdArray.contains(ui))
+            if (!menuIdArray.contains(ui)) {
                 menuIdArray.add(foodOrderedList.get(index).getMenu_id());
+            }
             contentOrder.add(orderData[index]);
         }
         sp_detail_list.getViewport().setView(contentOrder);
