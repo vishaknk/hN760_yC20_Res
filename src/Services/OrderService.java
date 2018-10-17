@@ -92,7 +92,7 @@ public class OrderService {
         try {
             while (rs.next()) {
                 OrderItemModel orderItem = new OrderItemModel();
-                orderItem.setOrder_id(rs.getString("order_id"));
+                orderItem.setOrder_id(rs.getString("oid"));
                 orderItem.setMenu_id(rs.getInt("menu_id"));
                 orderItem.setTable_id(rs.getInt("table_id"));
                 orderItem.setName(rs.getString("customer_name"));
@@ -116,7 +116,7 @@ public class OrderService {
         try {
             while (rs.next()) {
                 OrderItemModel orderItem = new OrderItemModel();
-                orderItem.setOrder_id(rs.getString("order_id"));
+                orderItem.setOrder_id(rs.getString("oid"));
                 orderItem.setTable_id(rs.getInt("table_id"));
                 orderItem.setName(rs.getString("customer_name"));
                 orderItem.setCustomer_name(rs.getString("customer_name"));
@@ -208,7 +208,7 @@ public class OrderService {
                 total = 0;
                 e.printStackTrace();
             }
-             sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price) "
+             sql = "Insert into tbl_order_sub (order_id, menu_id,quantity,price,total_price) "
                         + "values('" + orderItemModel.getOrder_id() + "','" + orderItemModel.getMenu_id()
                         + "', '" + orderItemModel.getQuantity() + "', '" + orderItemModel.getPrice()
                         + "', '" + total + "')";

@@ -54,7 +54,7 @@ public class OrderPanel extends javax.swing.JPanel {
     public OrderPanel() {
         initComponents();
         //Model class to store the item data
-
+        customerOrderId = "";
         foodProductList = new ArrayList<>();
         foodOrderedList = new ArrayList<>();
         customerList = new ArrayList<>();
@@ -210,6 +210,7 @@ public class OrderPanel extends javax.swing.JPanel {
     private void tableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tableButtonActionPerformed
         // TODO add your handling code here:
         menuIdArray.clear();
+        customerOrderId = "";
         categoryItem = new CategoryItem(5);
         if (categoryItem != null) {
             categoryItem.setVisible(true);
@@ -263,6 +264,7 @@ public class OrderPanel extends javax.swing.JPanel {
                 setProductList();
                 setOrderList();
                 setCustomerList(tableId);
+                customerOrderId = "";
             } else {
                 JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
             }
@@ -282,6 +284,7 @@ public class OrderPanel extends javax.swing.JPanel {
                 setProductList();
                 setOrderList();
                 setCustomerList(tableId);
+                customerOrderId = "";
             } else {
                 JOptionPane.showMessageDialog(null, "Order not placed", "ERROR", 0);
             }
@@ -310,6 +313,7 @@ public class OrderPanel extends javax.swing.JPanel {
             setProductList();
             setOrderList();
             setCustomerList(tableId);
+            customerOrderId = "";
         } else {
             JOptionPane.showMessageDialog(null, "Print not initiated", "ERROR", 0);
         }
